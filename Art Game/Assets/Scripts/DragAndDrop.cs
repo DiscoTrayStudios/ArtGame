@@ -25,7 +25,7 @@ public class DragAndDrop : MonoBehaviour
                     {
                         return;
                     }
-                    selectedPiece = hit.collider.gameObject;
+                    selectedPiece = hit.collider.gameObject; 
                     Cursor.visible = false;
                 }
             }
@@ -41,6 +41,13 @@ public class DragAndDrop : MonoBehaviour
         }
         if (Input.GetMouseButtonUp(0))
         {
+            Vector3 position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.WorldToScreenPoint(selectedPiece.transform.position).z);
+            Vector3 worldpos = Camera.main.ScreenToWorldPoint(position);
+            if (selectedPiece != null)
+            {
+                selectedPiece.transform.position = new Vector3(worldpos.x, worldpos.y, 1.55f);
+                selectedPiece.GetComponent<SpriteMask>().alphaCutoff = 0.2f;
+            }
             selectedPiece = null;
             Cursor.visible = true;
         }
@@ -50,7 +57,8 @@ public class DragAndDrop : MonoBehaviour
         {
             Vector3 position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.WorldToScreenPoint(selectedPiece.transform.position).z);
             Vector3 worldpos = Camera.main.ScreenToWorldPoint(position);
-            selectedPiece.transform.position = new Vector3(worldpos.x, worldpos.y, worldpos.z);
+            selectedPiece.transform.position = new Vector3(worldpos.x, worldpos.y, -0.25f);
+            selectedPiece.GetComponent<SpriteMask>().alphaCutoff = 1f;
 
 
         }
