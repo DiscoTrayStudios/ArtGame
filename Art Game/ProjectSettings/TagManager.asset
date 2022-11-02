@@ -6,6 +6,8 @@ TagManager:
   tags:
   - painting
   - puzzle
+  - ispy
+  - gallery
   layers:
   - Default
   - TransparentFX
