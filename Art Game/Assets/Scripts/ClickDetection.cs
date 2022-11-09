@@ -24,7 +24,7 @@ public class ClickDetection : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             RaycastHit hit = castray();
-            Debug.Log(hit.collider.name);
+            
             if (hit.collider != null)
             {
                 Debug.Log(hit.collider.name);
@@ -43,12 +43,32 @@ public class ClickDetection : MonoBehaviour
                 {
                     GameManager.Instance.buttonPress(hit.collider.name);
                 }
-                else if (hit.collider.CompareTag("pbn"))
-                {
-                    Debug.Log(hit.collider.name);
-                }
+                
+
             }
-            
+            else if (GameManager.Instance.getGame() == "and i was there")
+            {
+                Debug.Log(-2);
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit2D hit2d = Physics2D.GetRayIntersection(ray);
+                
+                if (hit2d.collider != null)
+                {
+                    Debug.Log(-1);
+                    if (hit2d.collider.CompareTag("pbn"))
+                    {
+                        GameManager.Instance.makeSpriteVisible(hit2d.collider.name);
+                    }
+                    else if (hit2d.collider.CompareTag("color"))
+                    {
+                        Debug.Log(1);
+                        GameManager.Instance.setColor(hit2d.collider.name);
+                        //hit2d.collider.gameObject  Outline stuff goes here
+                    }
+                }
+
+            }
+
 
         }
 
