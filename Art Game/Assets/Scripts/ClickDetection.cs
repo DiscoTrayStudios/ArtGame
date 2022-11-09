@@ -4,10 +4,18 @@ using UnityEngine;
 
 public class ClickDetection : MonoBehaviour
 {
+    private bool move;
+    public GameObject end;
+    public float enddist;
+    public float back;
+    private Vector3 endpos;
+    private GameObject temp;
     // Start is called before the first frame update
     void Start()
     {
-        
+        move = false;
+        endpos = end.transform.position;
+        endpos.z = endpos.z - back;
     }
 
     // Update is called once per frame
@@ -16,16 +24,64 @@ public class ClickDetection : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             RaycastHit hit = castray();
-            if (hit.collider.CompareTag("gallery"))
-            {
-                Debug.Log("YAY");
-            }
-            else if (hit.collider.CompareTag("ispy"))
-            {
-                Debug.Log(hit.collider.gameObject.name);
-            }
             
+            if (hit.collider != null)
+            {
+                Debug.Log(hit.collider.name);
+                if (hit.collider.CompareTag("gallery"))
+                {
+                    Debug.Log("YAY");
+                    move = true;
+                    temp = hit.collider.gameObject;
+                    
+                }
+                else if (hit.collider.CompareTag("ispy"))
+                {
+                    Debug.Log(hit.collider.gameObject.name);
+                }
+                else if (hit.collider.CompareTag("painting"))
+                {
+                    GameManager.Instance.buttonPress(hit.collider.name);
+                }
+                
 
+            }
+            else if (GameManager.Instance.getGame() == "and i was there")
+            {
+                Debug.Log(-2);
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit2D hit2d = Physics2D.GetRayIntersection(ray);
+                
+                if (hit2d.collider != null)
+                {
+                    Debug.Log(-1);
+                    if (hit2d.collider.CompareTag("pbn"))
+                    {
+                        GameManager.Instance.makeSpriteVisible(hit2d.collider.name);
+                    }
+                    else if (hit2d.collider.CompareTag("color"))
+                    {
+                        Debug.Log(1);
+                        GameManager.Instance.setColor(hit2d.collider.name);
+                        //hit2d.collider.gameObject  Outline stuff goes here
+                    }
+                }
+
+            }
+
+
+        }
+
+        if (move)
+        {
+            transform.position = Vector3.Lerp(transform.position, endpos, Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, end.transform.rotation, Time.deltaTime * 1.5f);
+            if (Vector3.Distance(transform.position, endpos) < enddist)
+            {
+                move = false;
+                temp.GetComponent<BoxCollider>().enabled = false;
+
+            }
         }
     }
 
