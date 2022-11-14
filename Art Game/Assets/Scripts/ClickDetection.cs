@@ -10,6 +10,7 @@ public class ClickDetection : MonoBehaviour
     public float back;
     private Vector3 endpos;
     private GameObject temp;
+    public GameObject wordlist;
     // Start is called before the first frame update
     void Start()
     {
@@ -37,11 +38,15 @@ public class ClickDetection : MonoBehaviour
                 }
                 else if (hit.collider.CompareTag("ispy"))
                 {
-                    Debug.Log(hit.collider.gameObject.name);
+                    GameManager.Instance.ispyfindWord(hit.collider.name);
                 }
                 else if (hit.collider.CompareTag("painting"))
                 {
                     GameManager.Instance.buttonPress(hit.collider.name);
+                }
+                else if (hit.collider.CompareTag("wordsearch"))
+                {
+                    GameManager.Instance.wordsearchfindword(hit.collider.name);
                 }
                 
 
@@ -95,4 +100,6 @@ public class ClickDetection : MonoBehaviour
         Physics.Raycast(worldmouseposnear, worldmouseposfar - worldmouseposnear, out hit);
         return hit;
     }
+
+
 }

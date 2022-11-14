@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     private Collider pcollider;
     private string game;
     private string curColor;
+    public GameObject ispyWordList;
+    public GameObject wordsearchWordList;
 
     private void Awake()
     {
@@ -50,7 +52,7 @@ public class GameManager : MonoBehaviour
         cam.orthographic = true;
         if (name.Equals("luncheon"))
         {
-            cam.transform.position = new Vector3(1.4f, 12f, -22f);
+            cam.transform.position = new Vector3(-4f, 12f, -22f);
             cam.transform.eulerAngles = new Vector3(0, 180f, 0);
             game = name;
         }
@@ -64,23 +66,22 @@ public class GameManager : MonoBehaviour
             cam.transform.position = new Vector3(26.75f, 45.48f, -20.54f);
             game = name;
         }
-        //else if (name.Equals("ice pies"))
-        //{
-        //    Debug.Log("Not implemented yet!");
-        //    cam.transform.position = new Vector3(12.92f, 15.16f, 31.19f);
-        //    cam.transform.eulerAngles = new Vector3(25.796f, 310.15f, 0);
-        //    cam.orthographic = false;
-            
-        //}
-        //else if (name.Equals("crossing"))
-        //{
-        //    Debug.Log("Not implemented yet!");
-        //    cam.transform.position = new Vector3(12.92f, 15.16f, 31.19f);
-        //    cam.transform.eulerAngles = new Vector3(25.796f, 310.15f, 0);
-        //    cam.orthographic = false;
+        else if (name.Equals("ice pies"))
+        {
+            cam.transform.position = new Vector3(21.3f, 73.1f, -22f);
+            cam.transform.eulerAngles = new Vector3(0, 180f, 0);
+            game = name;
 
-        //}
-    }
+            }
+            //else if (name.Equals("crossing"))
+            //{
+            //    Debug.Log("Not implemented yet!");
+            //    cam.transform.position = new Vector3(12.92f, 15.16f, 31.19f);
+            //    cam.transform.eulerAngles = new Vector3(25.796f, 310.15f, 0);
+            //    cam.orthographic = false;
+
+            //}
+        }
 
     public string getGame()
     {
@@ -110,5 +111,27 @@ public class GameManager : MonoBehaviour
         Debug.Log(2);
         curColor = name;
 
+    }
+
+    public void ispyfindWord(string clicked)
+    {
+        foreach (Transform child in ispyWordList.transform)
+        {
+            if (child.name.Equals(clicked))
+            {
+                child.gameObject.GetComponent<TextMeshPro>().color = Color.gray;
+            }
+        }
+    }
+
+    public void wordsearchfindword(string clicked)
+    {
+        foreach (Transform child in wordsearchWordList.transform)
+        {
+            if (child.name.Equals(clicked))
+            {
+                child.gameObject.GetComponent<TextMeshPro>().color = Color.gray;
+            }
+        }
     }
 }
