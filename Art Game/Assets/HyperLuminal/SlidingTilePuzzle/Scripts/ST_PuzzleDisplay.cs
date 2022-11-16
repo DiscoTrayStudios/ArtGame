@@ -40,12 +40,17 @@ public class ST_PuzzleDisplay : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
+		
+
+	}
+
+	public void actualStart()
+    {
 		// create the games puzzle tiles from the provided image.
 		CreatePuzzleTiles();
 
 		// mix up the puzzle.
 		StartCoroutine(JugglePuzzle());
-
 	}
 	
 	// Update is called once per frame
@@ -180,7 +185,7 @@ public class ST_PuzzleDisplay : MonoBehaviour
 
 	private IEnumerator JugglePuzzle()
 	{
-		yield return new WaitForSeconds(1.0f);
+		yield return new WaitForSeconds(3.0f);
 
 		// hide a puzzle tile (one is always missing to allow the puzzle movement).
 		TileDisplayArray[0,0].GetComponent<ST_PuzzleTile>().Active = false;
@@ -233,6 +238,7 @@ public class ST_PuzzleDisplay : MonoBehaviour
 		if(Complete)
 		{
 			Debug.Log("Puzzle Complete!");
+			GameManager.Instance.quitGame();
 		}
 
 		yield return null;
@@ -320,4 +326,9 @@ public class ST_PuzzleDisplay : MonoBehaviour
 		TileDisplayArray[2,3].GetComponent<Renderer>().material = thisTileMaterial2;
 		*/
 	}
+
+	public bool getComplete()
+    {
+		return Complete;
+    }
 }

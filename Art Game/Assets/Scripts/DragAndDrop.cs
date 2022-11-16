@@ -21,10 +21,11 @@ public class DragAndDrop : MonoBehaviour
                 RaycastHit  hit= castray();
                 if (hit.collider != null)
                 {
-                    if (!hit.collider.CompareTag("puzzle"))
+                    if ((!hit.collider.CompareTag("puzzle")) || (!hit.collider.gameObject.GetComponent<Snap>().getcanSnap()))
                     {
                         return;
                     }
+
                     selectedPiece = hit.collider.gameObject; 
                     Cursor.visible = false;
                 }
