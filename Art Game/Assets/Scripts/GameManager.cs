@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour
     public GameObject wordsearchWordList;
     public GameObject puzzlePieces;
     public GameObject slider;
+    public GameObject mainMenu;
+    public GameObject paintings;
 
     private Vector3 camStartPos;
     private Quaternion camStartRot;
@@ -71,6 +73,13 @@ public class GameManager : MonoBehaviour
 
             }
         }
+    }
+
+
+    public void play()
+    {
+        paintings.SetActive(true);
+        mainMenu.SetActive(false);
     }
 
     public void setLerp(bool val)
