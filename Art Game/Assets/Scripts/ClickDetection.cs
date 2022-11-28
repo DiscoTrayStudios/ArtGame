@@ -79,8 +79,8 @@ public class ClickDetection : MonoBehaviour
 
         if (move)
         {
-            transform.position = Vector3.Lerp(transform.position, endpos, Time.deltaTime);
-            transform.rotation = Quaternion.Lerp(transform.rotation, end.transform.rotation, Time.deltaTime * 1.5f);
+            transform.position = Vector3.Lerp(transform.position, endpos, Time.deltaTime * 1.75f);
+            transform.rotation = Quaternion.Lerp(transform.rotation, end.transform.rotation, Time.deltaTime * 2f);
             if (Vector3.Distance(transform.position, endpos) < enddist)
             {
                 move = false;

@@ -26,6 +26,10 @@ public class GameManager : MonoBehaviour
     public GameObject puzzlePieces;
     public GameObject slider;
     public GameObject mainMenu;
+    public GameObject homePage;
+    public GameObject creditsPage;
+    public GameObject settingsPage;
+    public GameObject backButton;
     public GameObject paintings;
 
     private Vector3 camStartPos;
@@ -80,6 +84,26 @@ public class GameManager : MonoBehaviour
     {
         paintings.SetActive(true);
         mainMenu.SetActive(false);
+    }
+
+    public void credits()
+    {
+        homePage.SetActive(false);
+        creditsPage.SetActive(true);
+        backButton.SetActive(true);
+    }
+    public void settings()
+    {
+        homePage.SetActive(false);
+        settingsPage.SetActive(true);
+        backButton.SetActive(true);
+    }
+    public void back()
+    {
+        homePage.SetActive(true);
+        creditsPage.SetActive(false);
+        settingsPage.SetActive(false);
+        backButton.SetActive(false);
     }
 
     public void setLerp(bool val)
