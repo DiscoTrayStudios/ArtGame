@@ -34,7 +34,8 @@ public class ClickDetection : MonoBehaviour
                     Debug.Log("YAY");
                     move = true;
                     temp = hit.collider.gameObject;
-                    
+                    GameManager.Instance.canClickOnPainting = true;
+
                 }
                 else if (hit.collider.CompareTag("ispy"))
                 {
@@ -42,7 +43,12 @@ public class ClickDetection : MonoBehaviour
                 }
                 else if (hit.collider.CompareTag("painting"))
                 {
-                    GameManager.Instance.buttonPress(hit.collider.name);
+                    if (GameManager.Instance.canClickOnPainting)
+                    {
+                        hit.collider.gameObject.transform.GetChild(0).gameObject.GetComponent<Transition>().lerp = true;
+                        hit.collider.gameObject.transform.GetChild(0).gameObject.GetComponent<Transition>().forward = true;
+                        //GameManager.Instance.buttonPress(hit.collider.name);
+                    }
                 }
                 else if (hit.collider.CompareTag("wordsearch"))
                 {

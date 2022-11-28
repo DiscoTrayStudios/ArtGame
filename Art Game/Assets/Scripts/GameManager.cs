@@ -31,6 +31,10 @@ public class GameManager : MonoBehaviour
     public GameObject settingsPage;
     public GameObject backButton;
     public GameObject paintings;
+    public GameObject paintings2;
+    public GameObject curPaint;
+    public bool canClickOnPainting;
+    public bool tileSlideStarted = false;
 
     private Vector3 camStartPos;
     private Quaternion camStartRot;
@@ -83,6 +87,7 @@ public class GameManager : MonoBehaviour
     public void play()
     {
         paintings.SetActive(true);
+        paintings2.SetActive(true);
         mainMenu.SetActive(false);
     }
 
@@ -127,27 +132,29 @@ public class GameManager : MonoBehaviour
             {
 
                 cam.transform.position = new Vector3(-4f, 12f, -22f);
-                cam.transform.eulerAngles = new Vector3(0, 180f, 0);
+                cam.transform.rotation = Quaternion.Euler(0, 180f, 0);
             }
             else if (name.Equals("lilypads"))
             {
                 cam.transform.position = new Vector3(-2.94f, 10.84f, -20.55f);
+                cam.transform.rotation = Quaternion.Euler(0, 0, 0);
                 cam.GetComponent<DragAndDrop>().enabled = true;
             }
             else if (name.Equals("and i was there"))
             {
                 cam.transform.position = new Vector3(26.75f, 45.48f, -20.54f);
+                cam.transform.rotation = Quaternion.Euler(0, 0, 0);
             }
             else if (name.Equals("ice pies"))
             {
                 cam.transform.position = new Vector3(21.3f, 73.1f, -22f);
-                cam.transform.eulerAngles = new Vector3(0, 180f, 0);
+                cam.transform.rotation = Quaternion.Euler(0, 180f, 0);
 
             }
             else if (name.Equals("crossing"))
             {
                 cam.transform.position = new Vector3(59.5f, 10.2f, -9.6f);
-                cam.transform.eulerAngles = new Vector3(0.0488541909f, 359.9f, 0.0226515327f);
+                cam.transform.rotation = Quaternion.Euler(0, 0, 0);
 
 
 
@@ -158,7 +165,11 @@ public class GameManager : MonoBehaviour
             if (name.Equals("crossing"))
             {
                 cam.orthographic = false;
-                slider.GetComponent<ST_PuzzleDisplay>().actualStart();
+                if (!tileSlideStarted)
+                {
+                    slider.GetComponent<ST_PuzzleDisplay>().actualStart();
+                    tileSlideStarted = true;
+                }
 
             }
         }
@@ -186,6 +197,7 @@ public class GameManager : MonoBehaviour
                     Debug.Log(pbnCounter);
                     if (pbnCounter == 44)
                     {
+                        curPaint.GetComponent<SpriteRenderer>().sprite = curPaint.GetComponent<Transition>().goodPic;
                         quitGame();
                     }
                 }
@@ -288,9 +300,13 @@ public class GameManager : MonoBehaviour
     {
         returnButton.gameObject.active = false;
         cam.GetComponent<DragAndDrop>().enabled = false;
-        cam.transform.position = camStartPos;
-        cam.transform.rotation = camStartRot;
+        cam.transform.position = new Vector3(-49f, 4.92f, 51.43f);
+        cam.transform.rotation = Quaternion.Euler(90f, 90f, 0);
         cam.orthographic = false;
-        wall.GetComponent<BoxCollider>().enabled = true;
+        curPaint.GetComponent<Transition>().lerp = true;
+        curPaint.GetComponent<Transition>().forward = false;
+        curPaint.GetComponent<Transition>().stageOne = true;
+        
+
     }
 }
