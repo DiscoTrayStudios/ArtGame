@@ -211,32 +211,36 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void ispyfindWord(string clicked)
+    public void ispyfindWord(GameObject clicked)
     {
         foreach (Transform child in ispyWordList.transform)
         {
-            if (child.name.Equals(clicked))
+            if (child.name.Equals(clicked.name))
             {
                 child.gameObject.GetComponent<TextMeshPro>().color = Color.gray;
+                clicked.gameObject.GetComponent<BoxCollider>().enabled = false;
                 ispyCounter += 1;
                 if (ispyCounter == 8)
                 {
+                    curPaint.GetComponent<SpriteRenderer>().sprite = curPaint.GetComponent<Transition>().goodPic;
                     quitGame();
                 }
             }
         }
     }
 
-    public void wordsearchfindword(string clicked)
+    public void wordsearchfindword(GameObject clicked)
     {
         foreach (Transform child in wordsearchWordList.transform)
         {
-            if (child.name.Equals(clicked))
+            if (child.name.Equals(clicked.name))
             {
                 child.gameObject.GetComponent<TextMeshPro>().color = Color.gray;
+                clicked.gameObject.GetComponent<BoxCollider>().enabled = false;
                 wordCounter += 1;
                 if (wordCounter == 8)
                 {
+                    curPaint.GetComponent<SpriteRenderer>().sprite = curPaint.GetComponent<Transition>().goodPic;
                     quitGame();
                 }
             }
@@ -244,7 +248,11 @@ public class GameManager : MonoBehaviour
     }
 
 
-
+    public void tileComplete()
+    {
+        curPaint.GetComponent<SpriteRenderer>().sprite = curPaint.GetComponent<Transition>().goodPic;
+        quitGame();
+    }
     public bool checkPuzzle()
     {
         foreach (Transform child in puzzlePieces.transform)
@@ -257,6 +265,7 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+        curPaint.GetComponent<SpriteRenderer>().sprite = curPaint.GetComponent<Transition>().goodPic;
         return true;
     }
 
