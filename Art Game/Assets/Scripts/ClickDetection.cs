@@ -11,6 +11,7 @@ public class ClickDetection : MonoBehaviour
     private Vector3 endpos;
     private GameObject temp;
     public GameObject wordlist;
+    private GameObject prevOutline;
     // Start is called before the first frame update
     void Start()
     {
@@ -72,9 +73,14 @@ public class ClickDetection : MonoBehaviour
                     }
                     else if (hit2d.collider.CompareTag("color"))
                     {
-                        Debug.Log(1);
+                        GameObject outline = hit2d.collider.gameObject.transform.GetChild(1).gameObject;
+                        if (prevOutline != null)
+                        {
+                            prevOutline.active = false;
+                        }
+                        prevOutline = outline;
+                        prevOutline.active = true;
                         GameManager.Instance.setColor(hit2d.collider.name);
-                        //hit2d.collider.gameObject  Outline stuff goes here
                     }
                 }
 
@@ -85,9 +91,9 @@ public class ClickDetection : MonoBehaviour
 
         if (move)
         {
-            transform.position = Vector3.Lerp(transform.position, endpos, Time.deltaTime * 1.75f);
+            transform.position = Vector3.Lerp(transform.position, new Vector3(-55.5030632f, 3.55635023f, 51.5f), Time.deltaTime * 1.75f);
             transform.rotation = Quaternion.Lerp(transform.rotation, end.transform.rotation, Time.deltaTime * 2f);
-            if (Vector3.Distance(transform.position, endpos) < enddist)
+            if (Vector3.Distance(transform.position, new Vector3(-55.5030632f, 3.55635023f, 51.5f)) < enddist)
             {
                 move = false;
                 temp.GetComponent<BoxCollider>().enabled = false;

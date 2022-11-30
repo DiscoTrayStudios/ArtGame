@@ -45,7 +45,7 @@ public class Transition : MonoBehaviour
                 if (stageOne)
                 {
                     GameManager.Instance.canClickOnPainting = false;
-                    transform.localPosition = Vector3.Lerp(transform.localPosition, lerpPos1, Time.deltaTime);
+                    transform.localPosition = Vector3.Lerp(transform.localPosition, lerpPos1, Time.deltaTime*1.2f);
                     transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(transform.eulerAngles.x, 90f, transform.eulerAngles.z), Time.deltaTime * 1.5f);
                     cam.transform.LookAt(transform);
                     if (Vector3.Distance(transform.localPosition, lerpPos1) < 0.01)
@@ -55,7 +55,7 @@ public class Transition : MonoBehaviour
                 }
                 else
                 {
-                    transform.localPosition = Vector3.Lerp(transform.localPosition, lerpPos2, Time.deltaTime);
+                    transform.localPosition = Vector3.Lerp(transform.localPosition, lerpPos2, Time.deltaTime * 1.2f);
                     transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(90f, 90f, transform.eulerAngles.z), Time.deltaTime * 1.3f);
                     cam.transform.position = Vector3.Lerp(cam.transform.position, camLerpPos, Time.deltaTime*1.3f);
                     cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, Quaternion.Euler(90f, 90f, transform.eulerAngles.z), Time.deltaTime * 1.3f);
@@ -73,7 +73,7 @@ public class Transition : MonoBehaviour
             {
                 if (stageOne)
                 {
-                    transform.localPosition = Vector3.Lerp(transform.localPosition, lerpPos1, Time.deltaTime);
+                    transform.localPosition = Vector3.Lerp(transform.localPosition, lerpPos1, Time.deltaTime * 1.2f);
                     transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 90f, transform.eulerAngles.z), Time.deltaTime * 1.5f);
                     cam.transform.position = Vector3.Lerp(cam.transform.position, camoriPos, Time.deltaTime * 1.3f);
                     //cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, Quaternion.Euler(0f, 90f, transform.eulerAngles.z), Time.deltaTime * 1.3f);
@@ -85,7 +85,7 @@ public class Transition : MonoBehaviour
                 }
                 else
                 {
-                    transform.localPosition = Vector3.Lerp(transform.localPosition, oriPos, Time.deltaTime);
+                    transform.localPosition = Vector3.Lerp(transform.localPosition, oriPos, Time.deltaTime * 1.2f);
                     transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * 1.5f);
                     cam.transform.LookAt(transform);
                     if (Vector3.Distance(transform.localPosition, oriPos) < 0.01)
@@ -94,7 +94,22 @@ public class Transition : MonoBehaviour
                         lerp = false;
                         forward = true;
                         cam.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-                        GameManager.Instance.canClickOnPainting = true;
+                        if (GameManager.Instance.completedGames == 4)
+                        {
+                            if (!GameManager.Instance.doorOpen)
+                            {
+                                GameManager.Instance.OpenTheDoor = true;
+                            }
+                            else
+                            {
+                                GameManager.Instance.canClickOnPainting = true;
+                            }
+                        }
+                        else
+                        {
+                            GameManager.Instance.canClickOnPainting = true;
+                        }
+                        
                         //GameManager.Instance.wall.GetComponent<BoxCollider>().enabled = true;
                     }
                 }

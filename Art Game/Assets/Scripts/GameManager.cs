@@ -35,6 +35,19 @@ public class GameManager : MonoBehaviour
     public GameObject curPaint;
     public bool canClickOnPainting;
     public bool tileSlideStarted = false;
+    public GameObject door;
+    
+
+    public AudioSource MainMenuMusic;
+    public AudioSource GalleryMusic;
+    public AudioSource CrossingMusic;
+    public AudioSource LuncheonMusic;
+    public AudioSource IcePiesMusic;
+    public AudioSource LilypadsMusic;
+    public AudioSource AndIWasThereMusic;
+    private AudioSource currentMusic;
+    public AudioSource doorSqueak;
+
 
     private Vector3 camStartPos;
     private Quaternion camStartRot;
@@ -43,6 +56,11 @@ public class GameManager : MonoBehaviour
     private int pbnCounter;
     private bool lerping = false;
     private bool lerpforward;
+    public int completedGames = 3;
+    public bool doorOpen = false;
+    public bool OpenTheDoor = false;
+    public bool doorOpening = false;
+    private float startTime;
 
     private void Awake()
     {
@@ -65,30 +83,87 @@ public class GameManager : MonoBehaviour
         ispyCounter = 0;
         wordCounter = 0;
         pbnCounter = 0;
+        StartCoroutine(FadeInMusic(MainMenuMusic));
+        AudioListener.volume = 0.3f;
     }
 
+    
     // Update is called once per frame
     void Update()
     {
-        if (lerping)
+        if (OpenTheDoor)
         {
-            if (lerpforward)
+            if (!doorOpening)
             {
-
+                doorOpening = true;
+                doorSqueak.Play();
+                startTime = Time.time;
+                
             }
-            else
+            if (Time.time - startTime > 1f)
             {
+                Quaternion lookOnLook = Quaternion.LookRotation(door.transform.position - cam.transform.position);
 
+                cam.transform.rotation = Quaternion.Slerp(cam.transform.rotation, lookOnLook, Time.deltaTime * 1f);
+
+                door.transform.rotation = Quaternion.Lerp(door.transform.rotation, Quaternion.Euler(0f, -90f, 0f), Time.deltaTime * 0.8f);
+
+                if (door.transform.localRotation.y < -85)
+                {
+                    OpenTheDoor = false;
+                }
             }
         }
     }
 
+    public IEnumerator FadeOutMusic(AudioSource source)
+    {
+        WaitForSeconds wait = new WaitForSeconds(0.04f);
+        bool done = false;
+        while (!done)
+        {
+            yield return wait;
+            source.volume *= 0.95f;
+            if (source.volume < 0.03f)
+            {
+                done = true;
+                source.Stop();
+            }
+            
+        }
+    }
+    public void AdjustVolume(float newVolume)
+    {
+        AudioListener.volume = newVolume;
+    }
+
+    public IEnumerator FadeInMusic(AudioSource source)
+    {
+        currentMusic = source;
+        WaitForSeconds wait = new WaitForSeconds(0.04f);
+        bool done = false;
+        source.volume = 0.03f;
+        source.Play();
+        while (!done)
+        {
+            yield return wait;
+            source.volume *= 1.05f;
+            if (source.volume > 0.95f)
+            {
+                done = true;
+                source.volume = 1f;
+            }
+
+        }
+    }
 
     public void play()
     {
         paintings.SetActive(true);
         paintings2.SetActive(true);
         mainMenu.SetActive(false);
+        StartCoroutine(FadeOutMusic(MainMenuMusic));
+        StartCoroutine(FadeInMusic(GalleryMusic));
     }
 
     public void credits()
@@ -133,28 +208,39 @@ public class GameManager : MonoBehaviour
 
                 cam.transform.position = new Vector3(-4f, 12f, -22f);
                 cam.transform.rotation = Quaternion.Euler(0, 180f, 0);
+                StartCoroutine(FadeOutMusic(currentMusic));
+                StartCoroutine(FadeInMusic(LuncheonMusic));
+
             }
             else if (name.Equals("lilypads"))
             {
                 cam.transform.position = new Vector3(-2.94f, 10.84f, -20.55f);
                 cam.transform.rotation = Quaternion.Euler(0, 0, 0);
                 cam.GetComponent<DragAndDrop>().enabled = true;
+                StartCoroutine(FadeOutMusic(currentMusic));
+                StartCoroutine(FadeInMusic(LilypadsMusic));
             }
             else if (name.Equals("and i was there"))
             {
                 cam.transform.position = new Vector3(26.75f, 45.48f, -20.54f);
                 cam.transform.rotation = Quaternion.Euler(0, 0, 0);
+                StartCoroutine(FadeOutMusic(currentMusic));
+                StartCoroutine(FadeInMusic(AndIWasThereMusic));
             }
             else if (name.Equals("ice pies"))
             {
                 cam.transform.position = new Vector3(21.3f, 73.1f, -22f);
                 cam.transform.rotation = Quaternion.Euler(0, 180f, 0);
+                StartCoroutine(FadeOutMusic(currentMusic));
+                StartCoroutine(FadeInMusic(IcePiesMusic));
 
             }
             else if (name.Equals("crossing"))
             {
                 cam.transform.position = new Vector3(59.5f, 10.2f, -9.6f);
                 cam.transform.rotation = Quaternion.Euler(0, 0, 0);
+                StartCoroutine(FadeOutMusic(currentMusic));
+                StartCoroutine(FadeInMusic(CrossingMusic));
 
 
 
@@ -198,7 +284,10 @@ public class GameManager : MonoBehaviour
                     if (pbnCounter == 44)
                     {
                         curPaint.GetComponent<SpriteRenderer>().sprite = curPaint.GetComponent<Transition>().goodPic;
+                        completedGames += 1;
                         quitGame();
+                        
+                        
                     }
                 }
             }
@@ -223,7 +312,10 @@ public class GameManager : MonoBehaviour
                 if (ispyCounter == 8)
                 {
                     curPaint.GetComponent<SpriteRenderer>().sprite = curPaint.GetComponent<Transition>().goodPic;
+                    completedGames += 1;
                     quitGame();
+                    
+                    
                 }
             }
         }
@@ -241,7 +333,11 @@ public class GameManager : MonoBehaviour
                 if (wordCounter == 8)
                 {
                     curPaint.GetComponent<SpriteRenderer>().sprite = curPaint.GetComponent<Transition>().goodPic;
+                    completedGames += 1;
                     quitGame();
+                    
+                    
+
                 }
             }
         }
@@ -251,7 +347,10 @@ public class GameManager : MonoBehaviour
     public void tileComplete()
     {
         curPaint.GetComponent<SpriteRenderer>().sprite = curPaint.GetComponent<Transition>().goodPic;
+        completedGames += 1;
         quitGame();
+        
+        
     }
     public bool checkPuzzle()
     {
@@ -266,6 +365,8 @@ public class GameManager : MonoBehaviour
             }
         }
         curPaint.GetComponent<SpriteRenderer>().sprite = curPaint.GetComponent<Transition>().goodPic;
+        completedGames += 1;
+        
         return true;
     }
 
@@ -309,13 +410,17 @@ public class GameManager : MonoBehaviour
     {
         returnButton.gameObject.active = false;
         cam.GetComponent<DragAndDrop>().enabled = false;
-        cam.transform.position = new Vector3(-49f, 4.92f, 51.43f);
         cam.transform.rotation = Quaternion.Euler(90f, 90f, 0);
         cam.orthographic = false;
+        cam.transform.position = new Vector3(-49f, 4.92f, 51.43f);
         curPaint.GetComponent<Transition>().lerp = true;
         curPaint.GetComponent<Transition>().forward = false;
         curPaint.GetComponent<Transition>().stageOne = true;
+        StartCoroutine(FadeOutMusic(currentMusic));
+        StartCoroutine(FadeInMusic(GalleryMusic));
         
 
     }
+
+    
 }
