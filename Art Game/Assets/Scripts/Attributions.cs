@@ -20,4 +20,5 @@ public class Attributions : MonoBehaviour
 
     //return button - https://www.flaticon.com/free-icon/return-button_61449
     //Quesiton Mark - https://www.flaticon.com/free-icon/question_471715?related_id=471715&origin=search
+    //Pause Button = <a href="https://www.flaticon.com/free-icons/pause" title="pause icons">Pause icons created by inkubators - Flaticon</a>
 }

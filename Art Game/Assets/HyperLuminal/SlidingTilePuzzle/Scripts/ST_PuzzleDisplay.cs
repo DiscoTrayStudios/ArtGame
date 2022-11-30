@@ -237,8 +237,7 @@ public class ST_PuzzleDisplay : MonoBehaviour
 		// if we are still complete then all the tiles are correct.
 		if(Complete)
 		{
-			Debug.Log("Puzzle Complete!");
-			GameManager.Instance.quitGame();
+			GameManager.Instance.tileComplete();
 		}
 
 		yield return null;
