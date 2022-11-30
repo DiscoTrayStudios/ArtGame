@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     public Canvas returnButton;
     public Canvas infoScreen;
+    public Canvas pauseScreen;
     public TextMeshProUGUI infotext;
     public GameObject player;
     public Camera cam;
@@ -36,6 +37,7 @@ public class GameManager : MonoBehaviour
     public bool canClickOnPainting;
     public bool tileSlideStarted = false;
     public GameObject door;
+
     
 
     public AudioSource MainMenuMusic;
@@ -61,6 +63,8 @@ public class GameManager : MonoBehaviour
     public bool OpenTheDoor = false;
     public bool doorOpening = false;
     private float startTime;
+    private bool gamePaused = false;
+    private GameObject resumeButton;
 
     private void Awake()
     {
@@ -85,6 +89,8 @@ public class GameManager : MonoBehaviour
         pbnCounter = 0;
         StartCoroutine(FadeInMusic(MainMenuMusic));
         AudioListener.volume = 0.3f;
+        resumeButton = pauseScreen.transform.GetChild(2).gameObject;
+        
     }
 
     
@@ -114,6 +120,38 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+        
+    }
+
+    public void pauseGame()
+    {
+        if (gamePaused)
+        {
+            resumeGame();
+        }
+        else
+        {
+            Time.timeScale = 0f;
+            mainMenu.active = true;
+            homePage.active = false;
+            settingsPage.active = true;
+            pauseScreen.gameObject.transform.GetChild(0).gameObject.active = false;
+            pauseScreen.gameObject.transform.GetChild(1).gameObject.active = false;
+            resumeButton.active = true;
+            gamePaused = true;
+        }
+    }
+
+    public void resumeGame()
+    {
+        Time.timeScale = 1f;
+        mainMenu.active = false;
+        homePage.active = false;
+        settingsPage.active = false;
+        pauseScreen.gameObject.transform.GetChild(0).gameObject.active = true;
+        pauseScreen.gameObject.transform.GetChild(1).gameObject.active = true;
+        resumeButton.active = false;
+        gamePaused = false;
     }
 
     public IEnumerator FadeOutMusic(AudioSource source)
@@ -162,6 +200,7 @@ public class GameManager : MonoBehaviour
         paintings.SetActive(true);
         paintings2.SetActive(true);
         mainMenu.SetActive(false);
+        pauseScreen.gameObject.SetActive(true);
         StartCoroutine(FadeOutMusic(MainMenuMusic));
         StartCoroutine(FadeInMusic(GalleryMusic));
     }
