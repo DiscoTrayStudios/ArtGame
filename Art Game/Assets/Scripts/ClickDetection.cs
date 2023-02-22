@@ -69,7 +69,7 @@ public class ClickDetection : MonoBehaviour
                     Debug.Log(-1);
                     if (hit2d.collider.CompareTag("pbn"))
                     {
-                        GameManager.Instance.makeSpriteVisible(hit2d.collider.name);
+                        GameManager.Instance.makeSpriteVisible(hit2d.collider.gameObject);
                     }
                     else if (hit2d.collider.CompareTag("color"))
                     {
