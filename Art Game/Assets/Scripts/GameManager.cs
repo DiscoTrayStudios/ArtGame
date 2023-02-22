@@ -307,28 +307,23 @@ public class GameManager : MonoBehaviour
         return game;
     }
 
-    public void makeSpriteVisible(string name)
+    // Redo this. Make it take transforms or colliders to get transform. no more of this searching shit.
+    public void makeSpriteVisible(GameObject space)
     {
-        foreach (Transform child in pbn.transform)
+        if (space.GetComponent<ColorSetter>().getColor().Equals(curColor))
         {
-            if (child.transform.name.Equals(name))
+            space.GetComponent<SpriteRenderer>().enabled = true;
+            space.GetComponent<PolygonCollider2D>().enabled = false;
+            space.GetComponentInChildren<TextMeshPro>().enabled = false;
+            pbnCounter += 1;
+            Debug.Log(pbnCounter);
+            if (pbnCounter == 44)
             {
-                if (child.gameObject.GetComponent<ColorSetter>().getColor().Equals(curColor))
-                {
-                    child.gameObject.GetComponent<SpriteRenderer>().enabled = true;
-                    child.gameObject.GetComponent<PolygonCollider2D>().enabled = false;
-                    child.gameObject.GetComponentInChildren<TextMeshPro>().enabled = false;
-                    pbnCounter += 1;
-                    Debug.Log(pbnCounter);
-                    if (pbnCounter == 44)
-                    {
-                        curPaint.GetComponent<SpriteRenderer>().sprite = curPaint.GetComponent<Transition>().goodPic;
-                        completedGames += 1;
-                        quitGame();
+                curPaint.GetComponent<SpriteRenderer>().sprite = curPaint.GetComponent<Transition>().goodPic;
+                completedGames += 1;
+                quitGame();
                         
                         
-                    }
-                }
             }
         }
     }
