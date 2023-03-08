@@ -56,9 +56,10 @@ public class GameManager : MonoBehaviour
     private int ispyCounter;
     private int wordCounter;
     private int pbnCounter;
+    private int pbnCounterLimit;
     private bool lerping = false;
     private bool lerpforward;
-    public int completedGames = 3;
+    public int completedGames = 0;
     public bool doorOpen = false;
     public bool OpenTheDoor = false;
     public bool doorOpening = false;
@@ -87,6 +88,7 @@ public class GameManager : MonoBehaviour
         ispyCounter = 0;
         wordCounter = 0;
         pbnCounter = 0;
+        pbnCounterLimit = 0;
         StartCoroutine(FadeInMusic(MainMenuMusic));
         AudioListener.volume = 0.3f;
         resumeButton = pauseScreen.transform.GetChild(2).gameObject;
@@ -265,6 +267,24 @@ public class GameManager : MonoBehaviour
                 cam.transform.rotation = Quaternion.Euler(0, 0, 0);
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(AndIWasThereMusic));
+                pbnCounterLimit = 44;
+            }
+            else if (name.Equals("office pbn"))
+            {
+                
+                cam.transform.position = new Vector3(47.640728f, 42.3699989f, -153.841095f);
+                cam.transform.rotation = Quaternion.Euler(0, 0, 0);
+                StartCoroutine(FadeOutMusic(currentMusic));
+                StartCoroutine(FadeInMusic(AndIWasThereMusic));
+                pbnCounterLimit = 75;
+            }
+            else if (name.Equals("museum pbn"))
+            {
+                cam.transform.position = new Vector3(135.779999f, 43.4300003f, -167.930954f);
+                cam.transform.rotation = Quaternion.Euler(0, 0, 0);
+                StartCoroutine(FadeOutMusic(currentMusic));
+                StartCoroutine(FadeInMusic(AndIWasThereMusic));
+                pbnCounterLimit = 78;
             }
             else if (name.Equals("ice pies"))
             {
@@ -310,6 +330,7 @@ public class GameManager : MonoBehaviour
     // Redo this. Make it take transforms or colliders to get transform. no more of this searching shit.
     public void makeSpriteVisible(GameObject space)
     {
+        
         if (space.GetComponent<ColorSetter>().getColor().Equals(curColor))
         {
             space.GetComponent<SpriteRenderer>().enabled = true;
@@ -317,9 +338,10 @@ public class GameManager : MonoBehaviour
             space.GetComponentInChildren<TextMeshPro>().enabled = false;
             pbnCounter += 1;
             Debug.Log(pbnCounter);
-            if (pbnCounter == 44)
+            if (pbnCounter == pbnCounterLimit)
             {
-                curPaint.GetComponent<SpriteRenderer>().sprite = curPaint.GetComponent<Transition>().goodPic;
+                //TODO ADD THIS BACK IN
+                //curPaint.GetComponent<SpriteRenderer>().sprite = curPaint.GetComponent<Transition>().goodPic;
                 completedGames += 1;
                 quitGame();
                         
@@ -431,6 +453,10 @@ public class GameManager : MonoBehaviour
         {
             infotext.text = "Tap on the pieces to slide them over and try and get the original picture! The bottom left square will be missing when the puzzle is complete.";
         }
+        else
+        {
+            infotext.text = "No info here. Add some, developers!";
+        }
         Time.timeScale = 0f;
     }
 
@@ -452,6 +478,7 @@ public class GameManager : MonoBehaviour
         curPaint.GetComponent<Transition>().stageOne = true;
         StartCoroutine(FadeOutMusic(currentMusic));
         StartCoroutine(FadeInMusic(GalleryMusic));
+        pbnCounter = 0;
         
 
     }

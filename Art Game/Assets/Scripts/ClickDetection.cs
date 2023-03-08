@@ -58,7 +58,7 @@ public class ClickDetection : MonoBehaviour
                 
 
             }
-            else if (GameManager.Instance.getGame() == "and i was there")
+            else if ((GameManager.Instance.getGame() == "and i was there") || (GameManager.Instance.getGame() == "office pbn") || (GameManager.Instance.getGame() == "museum pbn"))
             {
                 Debug.Log(-2);
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
