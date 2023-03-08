@@ -22,7 +22,6 @@ public class GameManager : MonoBehaviour
     private string game;
     public GameObject wall;
     private string curColor;
-    public GameObject ispyWordList;
     public GameObject wordsearchWordList;
     public GameObject puzzlePieces;
     public GameObject slider;
@@ -356,16 +355,21 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void ispyfindWord(GameObject clicked)
+    public void ispyfindWord(GameObject clicked, GameObject WordList)
     {
-        foreach (Transform child in ispyWordList.transform)
+        int ispyCounterMax = 0;
+        foreach (Transform child in clicked.transform.parent)
+        {
+            ispyCounterMax += 1;
+        }
+        foreach (Transform child in WordList.transform)
         {
             if (child.name.Equals(clicked.name))
             {
                 child.gameObject.GetComponent<TextMeshPro>().color = Color.gray;
                 clicked.gameObject.GetComponent<BoxCollider>().enabled = false;
                 ispyCounter += 1;
-                if (ispyCounter == 8)
+                if (ispyCounter == ispyCounterMax)
                 {
                     curPaint.GetComponent<SpriteRenderer>().sprite = curPaint.GetComponent<Transition>().goodPic;
                     completedGames += 1;

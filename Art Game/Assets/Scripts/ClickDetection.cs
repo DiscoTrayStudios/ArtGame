@@ -40,7 +40,7 @@ public class ClickDetection : MonoBehaviour
                 }
                 else if (hit.collider.CompareTag("ispy"))
                 {
-                    GameManager.Instance.ispyfindWord(hit.collider.gameObject);
+                    GameManager.Instance.ispyfindWord(hit.collider.gameObject, hit.collider.transform.parent.parent.Find("Words").gameObject);
                 }
                 else if (hit.collider.CompareTag("painting"))
                 {
