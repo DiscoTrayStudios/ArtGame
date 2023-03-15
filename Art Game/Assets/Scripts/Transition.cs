@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Transition : MonoBehaviour
 {
-
+    // ADD ABILITY TO CHOOSE BETWEEN CAMERA AND PAINTINGS, AND ADD START AND END COORD FOR BOTH
     public bool lerp;
     public bool forward;
     public bool stageOne = true;
@@ -18,6 +18,7 @@ public class Transition : MonoBehaviour
     private Vector3 lerpPos2;
     private Vector3 camLerpPos;
     private Vector3 camoriPos;
+    private Quaternion camoriRot;
     private Camera cam;
     // Start is called before the first frame update
     void Start()
@@ -30,7 +31,8 @@ public class Transition : MonoBehaviour
         camLerpPos = new Vector3(-49f, 4.92f, 51.43f);
         GameObject c = GameObject.Find("Camera");
         cam = c.GetComponent<Camera>();
-        camoriPos = new Vector3(-55.5026817f, 3.55660272f, 51.8777657f);
+        camoriPos = GameManager.Instance.camStartPos;
+        camoriRot = GameManager.Instance.camStartRot;
         stageOne = true;
         
     }
@@ -93,22 +95,10 @@ public class Transition : MonoBehaviour
                         stageOne = true;
                         lerp = false;
                         forward = true;
-                        cam.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-                        if (GameManager.Instance.completedGames == 4)
-                        {
-                            if (!GameManager.Instance.doorOpen)
-                            {
-                                GameManager.Instance.OpenTheDoor = true;
-                            }
-                            else
-                            {
-                                GameManager.Instance.canClickOnPainting = true;
-                            }
-                        }
-                        else
-                        {
-                            GameManager.Instance.canClickOnPainting = true;
-                        }
+                        cam.transform.rotation = camoriRot;
+                        
+                        GameManager.Instance.canClickOnPainting = true;
+                        
                         
                         //GameManager.Instance.wall.GetComponent<BoxCollider>().enabled = true;
                     }
