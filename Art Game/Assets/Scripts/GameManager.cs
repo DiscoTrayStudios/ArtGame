@@ -15,12 +15,10 @@ public class GameManager : MonoBehaviour
     public Canvas infoScreen;
     public Canvas pauseScreen;
     public TextMeshProUGUI infotext;
-    public GameObject player;
     public Camera cam;
-    public GameObject pbn;
     private Collider pcollider;
     private string game;
-    public GameObject wall;
+    public GameObject paintings;
     private string curColor;
     public GameObject wordsearchWordList;
     public GameObject puzzlePieces;
@@ -30,28 +28,23 @@ public class GameManager : MonoBehaviour
     public GameObject creditsPage;
     public GameObject settingsPage;
     public GameObject backButton;
-    public GameObject paintings;
-    public GameObject paintings2;
     public GameObject curPaint;
     public bool canClickOnPainting;
     public bool tileSlideStarted = false;
-    public GameObject door;
 
     
 
     public AudioSource MainMenuMusic;
     public AudioSource GalleryMusic;
-    public AudioSource CrossingMusic;
-    public AudioSource LuncheonMusic;
-    public AudioSource IcePiesMusic;
-    public AudioSource LilypadsMusic;
-    public AudioSource AndIWasThereMusic;
-    private AudioSource currentMusic;
-    public AudioSource doorSqueak;
+    public AudioSource TileMusic;
+    public AudioSource IspyMusic;
+    public AudioSource JigsawMusic;
+    public AudioSource PBNMusic;
+    private AudioSource currentMusic; 
 
 
-    private Vector3 camStartPos;
-    private Quaternion camStartRot;
+    public Vector3 camStartPos;
+    public Quaternion camStartRot;
     private int ispyCounter;
     private int wordCounter;
     private int pbnCounter;
@@ -59,9 +52,6 @@ public class GameManager : MonoBehaviour
     private bool lerping = false;
     private bool lerpforward;
     public int completedGames = 0;
-    public bool doorOpen = false;
-    public bool OpenTheDoor = false;
-    public bool doorOpening = false;
     private float startTime;
     private bool gamePaused = false;
     private GameObject resumeButton;
@@ -98,29 +88,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (OpenTheDoor)
-        {
-            if (!doorOpening)
-            {
-                doorOpening = true;
-                doorSqueak.Play();
-                startTime = Time.time;
-                
-            }
-            if (Time.time - startTime > 1f)
-            {
-                Quaternion lookOnLook = Quaternion.LookRotation(door.transform.position - cam.transform.position);
-
-                cam.transform.rotation = Quaternion.Slerp(cam.transform.rotation, lookOnLook, Time.deltaTime * 1f);
-
-                door.transform.rotation = Quaternion.Lerp(door.transform.rotation, Quaternion.Euler(0f, -90f, 0f), Time.deltaTime * 0.8f);
-
-                if (door.transform.localRotation.y < -85)
-                {
-                    OpenTheDoor = false;
-                }
-            }
-        }
+        
         
     }
 
@@ -199,7 +167,6 @@ public class GameManager : MonoBehaviour
     public void play()
     {
         paintings.SetActive(true);
-        paintings2.SetActive(true);
         mainMenu.SetActive(false);
         pauseScreen.gameObject.SetActive(true);
         StartCoroutine(FadeOutMusic(MainMenuMusic));
@@ -243,13 +210,13 @@ public class GameManager : MonoBehaviour
         
         if (!lerping)
         {
-            if (name.Equals("luncheon"))
+            if (name.Equals("office ispy"))
             {
 
                 cam.transform.position = new Vector3(-4f, 12f, -22f);
                 cam.transform.rotation = Quaternion.Euler(0, 180f, 0);
                 StartCoroutine(FadeOutMusic(currentMusic));
-                StartCoroutine(FadeInMusic(LuncheonMusic));
+                StartCoroutine(FadeInMusic(IspyMusic));
 
             }
             else if (name.Equals("lilypads"))
@@ -258,14 +225,14 @@ public class GameManager : MonoBehaviour
                 cam.transform.rotation = Quaternion.Euler(0, 0, 0);
                 cam.GetComponent<DragAndDrop>().enabled = true;
                 StartCoroutine(FadeOutMusic(currentMusic));
-                StartCoroutine(FadeInMusic(LilypadsMusic));
+                StartCoroutine(FadeInMusic(JigsawMusic));
             }
             else if (name.Equals("and i was there"))
             {
                 cam.transform.position = new Vector3(26.75f, 45.48f, -20.54f);
                 cam.transform.rotation = Quaternion.Euler(0, 0, 0);
                 StartCoroutine(FadeOutMusic(currentMusic));
-                StartCoroutine(FadeInMusic(AndIWasThereMusic));
+                StartCoroutine(FadeInMusic(PBNMusic));
                 pbnCounterLimit = 44;
             }
             else if (name.Equals("office pbn"))
@@ -274,7 +241,7 @@ public class GameManager : MonoBehaviour
                 cam.transform.position = new Vector3(47.640728f, 42.3699989f, -153.841095f);
                 cam.transform.rotation = Quaternion.Euler(0, 0, 0);
                 StartCoroutine(FadeOutMusic(currentMusic));
-                StartCoroutine(FadeInMusic(AndIWasThereMusic));
+                StartCoroutine(FadeInMusic(PBNMusic));
                 pbnCounterLimit = 75;
             }
             else if (name.Equals("museum pbn"))
@@ -282,23 +249,16 @@ public class GameManager : MonoBehaviour
                 cam.transform.position = new Vector3(135.779999f, 43.4300003f, -167.930954f);
                 cam.transform.rotation = Quaternion.Euler(0, 0, 0);
                 StartCoroutine(FadeOutMusic(currentMusic));
-                StartCoroutine(FadeInMusic(AndIWasThereMusic));
+                StartCoroutine(FadeInMusic(PBNMusic));
                 pbnCounterLimit = 78;
             }
-            else if (name.Equals("ice pies"))
-            {
-                cam.transform.position = new Vector3(21.3f, 73.1f, -22f);
-                cam.transform.rotation = Quaternion.Euler(0, 180f, 0);
-                StartCoroutine(FadeOutMusic(currentMusic));
-                StartCoroutine(FadeInMusic(IcePiesMusic));
-
-            }
+            
             else if (name.Equals("crossing"))
             {
                 cam.transform.position = new Vector3(59.5f, 10.2f, -9.6f);
                 cam.transform.rotation = Quaternion.Euler(0, 0, 0);
                 StartCoroutine(FadeOutMusic(currentMusic));
-                StartCoroutine(FadeInMusic(CrossingMusic));
+                StartCoroutine(FadeInMusic(TileMusic));
 
 
 
@@ -474,16 +434,16 @@ public class GameManager : MonoBehaviour
     {
         returnButton.gameObject.active = false;
         cam.GetComponent<DragAndDrop>().enabled = false;
-        cam.transform.rotation = Quaternion.Euler(90f, 90f, 0);
+        cam.transform.rotation = camStartRot;
         cam.orthographic = false;
-        cam.transform.position = new Vector3(-49f, 4.92f, 51.43f);
+        cam.transform.position = camStartPos;
         curPaint.GetComponent<Transition>().lerp = true;
         curPaint.GetComponent<Transition>().forward = false;
         curPaint.GetComponent<Transition>().stageOne = true;
         StartCoroutine(FadeOutMusic(currentMusic));
         StartCoroutine(FadeInMusic(GalleryMusic));
         pbnCounter = 0;
-        
+         
 
     }
 

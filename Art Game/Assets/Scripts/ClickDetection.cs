@@ -5,10 +5,10 @@ using UnityEngine;
 public class ClickDetection : MonoBehaviour
 {
     private bool move;
-    public GameObject end;
     public float enddist;
     public float back;
     private Vector3 endpos;
+    private Quaternion endrot;
     private GameObject temp;
     public GameObject wordlist;
     private GameObject prevOutline;
@@ -16,7 +16,8 @@ public class ClickDetection : MonoBehaviour
     void Start()
     {
         move = false;
-        endpos = end.transform.position;
+        endpos = GameManager.Instance.cam.transform.position;
+        endrot = GameManager.Instance.cam.transform.rotation;
         endpos.z = endpos.z - back;
     }
 
@@ -30,6 +31,7 @@ public class ClickDetection : MonoBehaviour
             if (hit.collider != null)
             {
                 Debug.Log(hit.collider.name);
+
                 if (hit.collider.CompareTag("gallery"))
                 {
                     Debug.Log("YAY");
@@ -46,6 +48,7 @@ public class ClickDetection : MonoBehaviour
                 {
                     if (GameManager.Instance.canClickOnPainting)
                     {
+
                         hit.collider.gameObject.transform.GetChild(0).gameObject.GetComponent<Transition>().lerp = true;
                         hit.collider.gameObject.transform.GetChild(0).gameObject.GetComponent<Transition>().forward = true;
                         //GameManager.Instance.buttonPress(hit.collider.name);
@@ -92,7 +95,7 @@ public class ClickDetection : MonoBehaviour
         if (move)
         {
             transform.position = Vector3.Lerp(transform.position, new Vector3(-55.5030632f, 3.55635023f, 51.5f), Time.deltaTime * 1.75f);
-            transform.rotation = Quaternion.Lerp(transform.rotation, end.transform.rotation, Time.deltaTime * 2f);
+            transform.rotation = Quaternion.Lerp(transform.rotation, endrot, Time.deltaTime * 2f);
             if (Vector3.Distance(transform.position, new Vector3(-55.5030632f, 3.55635023f, 51.5f)) < enddist)
             {
                 move = false;
