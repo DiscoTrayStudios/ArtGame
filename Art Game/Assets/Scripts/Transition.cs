@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.TerrainTools;
 
 public class Transition : MonoBehaviour
 {
@@ -12,29 +14,28 @@ public class Transition : MonoBehaviour
     public Sprite badPic;
     public Sprite goodPic;
 
-    private Vector3 oriPos;
-    private Quaternion oriRot;
+    private Vector3 paintPos;
+    private Quaternion paintRot;
     private Vector3 lerpPos1;
     private Vector3 lerpPos2;
     private Vector3 camLerpPos;
     private Vector3 camoriPos;
     private Quaternion camoriRot;
+    private Vector3 paintoriPos;
+    private Quaternion paintoriRot;
     private Camera cam;
     // Start is called before the first frame update
     void Start()
     {
-        oriPos = transform.localPosition;
-        oriRot = transform.rotation;
-        Debug.Log(oriRot);
-        lerpPos1 = new Vector3(0.635f, 0.183f, -1.5f);
-        lerpPos2 = new Vector3(0.675f, -0.075f, -1.3651f);
-        camLerpPos = new Vector3(-49f, 4.92f, 51.43f);
+        paintPos = transform.localPosition;
+        paintoriPos = transform.localPosition;
+        paintoriRot = transform.localRotation; ;
+        paintRot = transform.localRotation;
         GameObject c = GameObject.Find("Camera");
         cam = c.GetComponent<Camera>();
         camoriPos = GameManager.Instance.camStartPos;
         camoriRot = GameManager.Instance.camStartRot;
         stageOne = true;
-        
     }
 
     // Update is called once per frame
@@ -44,64 +45,35 @@ public class Transition : MonoBehaviour
         {
             if (forward)
             {
-                if (stageOne)
+                Vector3 targetCameraPosition = transform.position + transform.forward * 2f;
+
+                // Lerp the camera's position towards the target position
+                cam.transform.position = Vector3.Lerp(cam.transform.position, targetCameraPosition, Time.deltaTime * 1.2f);
+                cam.transform.LookAt(transform.position);
+
+                // If the camera has reached the target position, stop moving it
+                if (Vector3.Distance(cam.transform.position,targetCameraPosition) < 0.1)
                 {
-                    GameManager.Instance.canClickOnPainting = false;
-                    transform.localPosition = Vector3.Lerp(transform.localPosition, lerpPos1, Time.deltaTime*1.2f);
-                    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(transform.eulerAngles.x, 90f, transform.eulerAngles.z), Time.deltaTime * 1.5f);
-                    cam.transform.LookAt(transform);
-                    if (Vector3.Distance(transform.localPosition, lerpPos1) < 0.01)
-                    {
-                        stageOne = false;
-                    }
+                    forward = false;
+                    lerp = false;
+                    GameManager.Instance.curPaint = gameObject;
+                    GameManager.Instance.buttonPress(transform.parent.gameObject.name);
                 }
-                else
-                {
-                    transform.localPosition = Vector3.Lerp(transform.localPosition, lerpPos2, Time.deltaTime * 1.2f);
-                    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(90f, 90f, transform.eulerAngles.z), Time.deltaTime * 1.3f);
-                    cam.transform.position = Vector3.Lerp(cam.transform.position, camLerpPos, Time.deltaTime*1.3f);
-                    cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, Quaternion.Euler(90f, 90f, transform.eulerAngles.z), Time.deltaTime * 1.3f);
-                    //cam.transform.LookAt(transform);
-                    if (Vector3.Distance(transform.localPosition, lerpPos2) < 0.01)
-                    {
-                        forward = false;
-                        lerp = false;
-                        GameManager.Instance.curPaint = gameObject;
-                        GameManager.Instance.buttonPress(transform.parent.gameObject.name);
-                    }
-                }
+                
             }
             else
             {
-                if (stageOne)
+
+                GameManager.Instance.canClickOnPainting = false;
+                cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition, camoriPos, Time.deltaTime * 1.2f);
+                cam.transform.localRotation = Quaternion.Lerp(cam.transform.rotation, camoriRot, Time.deltaTime * 1.2f);
+                if (Vector3.Distance(cam.transform.localPosition, camoriPos) < 0.01)
                 {
-                    transform.localPosition = Vector3.Lerp(transform.localPosition, lerpPos1, Time.deltaTime * 1.2f);
-                    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 90f, transform.eulerAngles.z), Time.deltaTime * 1.5f);
-                    cam.transform.position = Vector3.Lerp(cam.transform.position, camoriPos, Time.deltaTime * 1.3f);
-                    //cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, Quaternion.Euler(0f, 90f, transform.eulerAngles.z), Time.deltaTime * 1.3f);
-                    cam.transform.LookAt(transform);
-                    if (Vector3.Distance(transform.localPosition, lerpPos1) < 0.01)
-                    {
-                        stageOne = false;
-                    }
-                }
-                else
-                {
-                    transform.localPosition = Vector3.Lerp(transform.localPosition, oriPos, Time.deltaTime * 1.2f);
-                    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * 1.5f);
-                    cam.transform.LookAt(transform);
-                    if (Vector3.Distance(transform.localPosition, oriPos) < 0.01)
-                    {
-                        stageOne = true;
-                        lerp = false;
-                        forward = true;
-                        cam.transform.rotation = camoriRot;
-                        
-                        GameManager.Instance.canClickOnPainting = true;
-                        
-                        
-                        //GameManager.Instance.wall.GetComponent<BoxCollider>().enabled = true;
-                    }
+                    forward = true;
+                    lerp = false;
+                    cam.transform.localRotation = camoriRot;
+
+                    GameManager.Instance.canClickOnPainting = true;
                 }
             }
         }
