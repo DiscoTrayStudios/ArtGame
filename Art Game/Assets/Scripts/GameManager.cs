@@ -217,7 +217,17 @@ public class GameManager : MonoBehaviour
                 cam.transform.rotation = Quaternion.Euler(0, 180f, 0);
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(IspyMusic));
+                cam.orthographicSize = 13.5f;
 
+            }
+            else if (name.Equals("office jigsaw"))
+            {
+                cam.transform.position = new Vector3(-5.71000004f, -95.5100021f, -52.3827896f);
+                cam.transform.rotation = Quaternion.Euler(0, 0f, 0);
+                cam.orthographicSize = 15f;
+                cam.GetComponent<DragAndDrop>().enabled = true;
+                StartCoroutine(FadeOutMusic(currentMusic));
+                StartCoroutine(FadeInMusic(JigsawMusic));
             }
             else if (name.Equals("lilypads"))
             {
@@ -243,6 +253,7 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(PBNMusic));
                 pbnCounterLimit = 75;
+                cam.orthographicSize = 13.5f;
             }
             else if (name.Equals("museum pbn"))
             {
@@ -259,14 +270,18 @@ public class GameManager : MonoBehaviour
                 cam.transform.rotation = Quaternion.Euler(0, 0, 0);
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(TileMusic));
-
-
-
+            }
+            else if (name.Equals("office tile"))
+            {
+                cam.transform.position = new Vector3(64.2286453f, 85f, 126.970001f);
+                cam.transform.rotation = Quaternion.Euler(0, 0, 0);
+                StartCoroutine(FadeOutMusic(currentMusic));
+                StartCoroutine(FadeInMusic(TileMusic));
             }
 
             displayInfoText();
             cam.orthographic = true;
-            if (name.Equals("crossing"))
+            if (name.Equals("crossing") || name.Equals("office tile"))
             {
                 cam.orthographic = false;
                 if (!tileSlideStarted)
@@ -300,7 +315,7 @@ public class GameManager : MonoBehaviour
             if (pbnCounter == pbnCounterLimit)
             {
                 //TODO ADD THIS BACK IN
-                //curPaint.GetComponent<SpriteRenderer>().sprite = curPaint.GetComponent<Transition>().goodPic;
+                curPaint.GetComponent<SpriteRenderer>().sprite = curPaint.GetComponent<Transition>().goodPic;
                 completedGames += 1;
                 quitGame();
                         
