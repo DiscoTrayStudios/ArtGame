@@ -42,10 +42,11 @@ public class DragAndDrop : MonoBehaviour
         }
         if (Input.GetMouseButtonUp(0))
         {
-            Vector3 position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.WorldToScreenPoint(selectedPiece.transform.position).z);
-            Vector3 worldpos = Camera.main.ScreenToWorldPoint(position);
+            
             if (selectedPiece != null)
             {
+                Vector3 position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.WorldToScreenPoint(selectedPiece.transform.position).z);
+                Vector3 worldpos = Camera.main.ScreenToWorldPoint(position);
                 selectedPiece.transform.position = new Vector3(worldpos.x, worldpos.y, 1.55f);
                 selectedPiece.GetComponent<SpriteMask>().alphaCutoff = 0.2f;
             }
