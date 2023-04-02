@@ -219,7 +219,17 @@ public class GameManager : MonoBehaviour
         {
             lastpos = cam.transform.position;
             lastrot = cam.transform.rotation;
-            if (name.Equals("office ispy"))
+            if (name.Equals("apartment ispy"))
+            {
+
+                cam.transform.position = new Vector3(-88.4400024f, 11.9799995f, -18.2500267f);
+                cam.transform.rotation = Quaternion.Euler(0, 180f, 0);
+                StartCoroutine(FadeOutMusic(currentMusic));
+                StartCoroutine(FadeInMusic(IspyMusic));
+                cam.orthographicSize = 13.5f;
+
+            }
+            else if (name.Equals("office ispy"))
             {
 
                 cam.transform.position = new Vector3(-4f, 12f, -22f);
@@ -237,6 +247,15 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(FadeInMusic(IspyMusic));
                 cam.orthographicSize = 13.5f;
 
+            }
+            else if (name.Equals("apartment jigsaw"))
+            {
+                cam.transform.position = new Vector3(-3.43000007f, -59.2799988f, -28.0927353f);
+                cam.transform.rotation = Quaternion.Euler(0, 0f, 0);
+                cam.orthographicSize = 15f;
+                cam.GetComponent<DragAndDrop>().enabled = true;
+                StartCoroutine(FadeOutMusic(currentMusic));
+                StartCoroutine(FadeInMusic(JigsawMusic));
             }
             else if (name.Equals("office jigsaw"))
             {
@@ -264,13 +283,15 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(JigsawMusic));
             }
-            else if (name.Equals("and i was there"))
+            else if (name.Equals("apartment pbn"))
             {
-                cam.transform.position = new Vector3(26.75f, 45.48f, -20.54f);
+
+                cam.transform.position = new Vector3(29.2000008f, 45.2999992f, -26.8999996f);
                 cam.transform.rotation = Quaternion.Euler(0, 0, 0);
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(PBNMusic));
                 pbnCounterLimit = 44;
+                cam.orthographicSize = 13.5f;
             }
             else if (name.Equals("office pbn"))
             {
@@ -294,6 +315,13 @@ public class GameManager : MonoBehaviour
             else if (name.Equals("crossing"))
             {
                 cam.transform.position = new Vector3(59.5f, 10.2f, -9.6f);
+                cam.transform.rotation = Quaternion.Euler(0, 0, 0);
+                StartCoroutine(FadeOutMusic(currentMusic));
+                StartCoroutine(FadeInMusic(TileMusic));
+            }
+            else if (name.Equals("apartment tile"))
+            {
+                cam.transform.position = new Vector3(64.1976471f, 110.110001f, 125.779999f);
                 cam.transform.rotation = Quaternion.Euler(0, 0, 0);
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(TileMusic));
@@ -324,7 +352,7 @@ public class GameManager : MonoBehaviour
 
             displayInfoText();
             cam.orthographic = true;
-            if (name.Equals("crossing") || name.Equals("office tile") || name.Equals("museum tile1") || name.Equals("museum tile2"))
+            if (name.Equals("crossing") || name.Equals("apartment tile") || name.Equals("office tile") || name.Equals("museum tile1") || name.Equals("museum tile2"))
             {
                 cam.orthographic = false;
                 if (!tileSlideStarted)
@@ -512,6 +540,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(FadeOutMusic(currentMusic));
         StartCoroutine(FadeInMusic(GalleryMusic));
         pbnCounter = 0;
+        Cursor.visible = true;
     }
 
     public void resetCam()
