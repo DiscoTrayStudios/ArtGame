@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour
     public AudioSource IspyMusic;
     public AudioSource JigsawMusic;
     public AudioSource PBNMusic;
+    public int whoDidIt;
     private AudioSource currentMusic; 
 
 
@@ -72,7 +73,30 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if (!Instance)
+        {
+            Debug.Log("it went with this");
+            Instance = this;
+            DontDestroyOnLoad(this);
+            whoDidIt = UnityEngine.Random.RandomRange(0, 3);
+            Debug.Log(whoDidIt);
+        }
+        else
+        {
+            Debug.Log("THis p[art works");
+            //GameManager temp = Instance;
+            //Instance = this;
+            //DontDestroyOnLoad (this);
+            //whoDidIt = temp.whoDidIt;
+            //Destroy(temp);
+            //Debug.Log(whoDidIt);
+            this.whoDidIt = Instance.whoDidIt;
+            Destroy(Instance); 
+            Instance = this;
+            DontDestroyOnLoad(this);
+            Debug.Log(whoDidIt);
+
+        }
     }
     // Start is called before the first frame update
     void Start()
