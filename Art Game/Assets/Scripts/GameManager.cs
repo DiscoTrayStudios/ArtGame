@@ -6,6 +6,8 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 using UnityEditor;
+using UnityEngine.UIElements;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -32,6 +34,7 @@ public class GameManager : MonoBehaviour
     public GameObject curPaint;
     public bool canClickOnPainting;
     public bool tileSlideStarted = false;
+    public UnityEngine.UI.Button nextLevelButton;
 
 
     
@@ -57,21 +60,19 @@ public class GameManager : MonoBehaviour
     private float startTime;
     private bool gamePaused = false;
     private GameObject resumeButton;
-    private Scene curScene;
+    
     private Vector3 lastpos;
     private Quaternion lastrot;
 
+
+
+    private Scene curScene;
+    private ProgressBar progressBar;
+    private string newScene;
+
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        Instance = this;
     }
     // Start is called before the first frame update
     void Start()
@@ -88,8 +89,41 @@ public class GameManager : MonoBehaviour
         resumeButton = pauseScreen.transform.GetChild(2).gameObject;
         
     }
-
     
+
+    // Load the new scene asynchronously
+    public void AsyncLoadScene()
+    {
+
+        if (curScene.name.Equals("Apartment"))
+        {
+            newScene = "Office";
+
+        }
+        else if (curScene.name.Equals("Office"))
+        {
+            newScene = "Museum";
+        }
+        StartCoroutine(LoadSceneAsync());
+    }
+
+    // Coroutine to load the new scene asynchronously
+    private IEnumerator LoadSceneAsync()
+    {
+        // Create an async operation to load the scene
+        AsyncOperation operation = SceneManager.LoadSceneAsync(newScene);
+
+        // While the operation is not yet complete, update the progress bar
+        while (!operation.isDone)
+        {
+            //float progress = Mathf.Clamp01(operation.progress / 0.9f);
+            //progressBar.SetValueWithoutNotify(progress);
+            yield return null;
+        }
+        curScene = SceneManager.GetSceneByName(newScene);
+    }
+
+
     // Update is called once per frame
     void Update()
     {
@@ -540,7 +574,15 @@ public class GameManager : MonoBehaviour
         StartCoroutine(FadeOutMusic(currentMusic));
         StartCoroutine(FadeInMusic(GalleryMusic));
         pbnCounter = 0;
-        Cursor.visible = true;
+        UnityEngine.Cursor.visible = true;
+        if ((completedGames > 1 && curScene.name != "Museum"))
+        {
+            nextLevelButton.gameObject.SetActive(true);
+        }
+        else if (nextLevelButton)
+        {
+            nextLevelButton.gameObject.SetActive(false);
+        }
     }
 
     public void resetCam()

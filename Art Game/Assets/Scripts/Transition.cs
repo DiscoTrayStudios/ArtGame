@@ -75,7 +75,6 @@ public class Transition : MonoBehaviour
             {
 
                 GameManager.Instance.canClickOnPainting = false;
-                Debug.Log(camoriPos.ToString());
                 cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition, camoriPos, Time.deltaTime * 1.2f);
                 cam.transform.localRotation = Quaternion.Lerp(cam.transform.rotation, camoriRot, Time.deltaTime * 1.2f);
                 if (Vector3.Distance(cam.transform.localPosition, camoriPos) < 0.01)

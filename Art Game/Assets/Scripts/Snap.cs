@@ -40,7 +40,6 @@ public class Snap : MonoBehaviour
             count++;
             if (count == 1000)
             {
-                Debug.Log("FUCKLSDFJLKSDJFLKSDJF");
                 break;
             }
             float newx = Random.Range(-maxdistance, maxdistance);
@@ -61,7 +60,6 @@ public class Snap : MonoBehaviour
                 Debug.Log(hit.collider.gameObject.name);
                 if (hit.collider.gameObject.name.Equals(target.name))
                 {
-                    Debug.Log("HERE HER HER EHRKLSJLKJSDLKFKLSDFJ");
                     break;
                 }
                 
