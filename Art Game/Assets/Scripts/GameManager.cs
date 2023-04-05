@@ -47,6 +47,7 @@ public class GameManager : MonoBehaviour
     public AudioSource PBNMusic;
     public int whoDidIt;
     public GameObject clueObjects;
+    public GameObject toggableLights;
     private AudioSource currentMusic; 
 
 
@@ -157,6 +158,9 @@ public class GameManager : MonoBehaviour
         // whoDidIt = 2 = Burch
             // Burch child 0 = Did do it
             // Burch child 1 = Did not do it
+
+
+        toggableLights.SetActive(false);
         clueObjects.transform.GetChild(2).gameObject.SetActive(true);
         if (whoDidIt.Equals(2))
         {
@@ -172,6 +176,10 @@ public class GameManager : MonoBehaviour
 
             clueObjects.transform.GetChild(Math.Abs(whoDidIt-1)).gameObject.SetActive(false);
             clueObjects.transform.GetChild(2).GetChild(0).gameObject.SetActive(false);
+        }
+        if (whoDidIt.Equals(1))
+        {
+            toggableLights.SetActive(true);
         }
     }
     // Update is called once per frame
@@ -625,7 +633,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(FadeInMusic(GalleryMusic));
         pbnCounter = 0;
         UnityEngine.Cursor.visible = true;
-        if ((completedGames > 1 && curScene.name != "Museum"))
+        if ((completedGames > 0&& curScene.name != "Museum"))
         {
             nextLevelButton.gameObject.SetActive(true);
         }
