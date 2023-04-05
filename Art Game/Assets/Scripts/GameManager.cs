@@ -6,6 +6,8 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 using UnityEditor;
+using UnityEngine.UIElements;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -23,6 +25,7 @@ public class GameManager : MonoBehaviour
     public GameObject wordsearchWordList;
     public GameObject puzzlePieces;
     public GameObject slider;
+    public GameObject slider2;
     public GameObject mainMenu;
     public GameObject homePage;
     public GameObject creditsPage;
@@ -31,6 +34,8 @@ public class GameManager : MonoBehaviour
     public GameObject curPaint;
     public bool canClickOnPainting;
     public bool tileSlideStarted = false;
+    public UnityEngine.UI.Button nextLevelButton;
+
 
     
 
@@ -40,6 +45,9 @@ public class GameManager : MonoBehaviour
     public AudioSource IspyMusic;
     public AudioSource JigsawMusic;
     public AudioSource PBNMusic;
+    public int whoDidIt;
+    public GameObject clueObjects;
+    public GameObject toggableLights;
     private AudioSource currentMusic; 
 
 
@@ -55,23 +63,47 @@ public class GameManager : MonoBehaviour
     private float startTime;
     private bool gamePaused = false;
     private GameObject resumeButton;
+    
+    private Vector3 lastpos;
+    private Quaternion lastrot;
+
+
+
+    private Scene curScene;
+    private ProgressBar progressBar;
+    private string newScene;
 
     private void Awake()
     {
-        if (Instance == null)
+        if (!Instance)
         {
+            Debug.Log("it went with this");
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(this);
+            whoDidIt = UnityEngine.Random.RandomRange(0, 3);
+            Debug.Log(whoDidIt);
         }
         else
         {
-            Destroy(gameObject);
+            Debug.Log("THis p[art works");
+            //GameManager temp = Instance;
+            //Instance = this;
+            //DontDestroyOnLoad (this);
+            //whoDidIt = temp.whoDidIt;
+            //Destroy(temp);
+            //Debug.Log(whoDidIt);
+            this.whoDidIt = Instance.whoDidIt;
+            Destroy(Instance); 
+            Instance = this;
+            DontDestroyOnLoad(this);
+            Debug.Log(whoDidIt);
+
         }
     }
     // Start is called before the first frame update
     void Start()
     {
-        
+        curScene = SceneManager.GetActiveScene();
         camStartPos = cam.transform.position;
         camStartRot = cam.transform.rotation;
         ispyCounter = 0;
@@ -81,16 +113,83 @@ public class GameManager : MonoBehaviour
         StartCoroutine(FadeInMusic(MainMenuMusic));
         AudioListener.volume = 0.3f;
         resumeButton = pauseScreen.transform.GetChild(2).gameObject;
+        loadClueObjects();
+
+    }
+    
+
+    // Load the new scene asynchronously
+    public void AsyncLoadScene()
+    {
+
+        if (curScene.name.Equals("Apartment"))
+        {
+            newScene = "Office";
+
+        }
+        else if (curScene.name.Equals("Office"))
+        {
+            newScene = "Museum";
+        }
+        StartCoroutine(LoadSceneAsync());
+    }
+
+    // Coroutine to load the new scene asynchronously
+    private IEnumerator LoadSceneAsync()
+    {
+        // Create an async operation to load the scene
+        AsyncOperation operation = SceneManager.LoadSceneAsync(newScene);
+
+        // While the operation is not yet complete, update the progress bar
+        while (!operation.isDone)
+        {
+            //float progress = Mathf.Clamp01(operation.progress / 0.9f);
+            //progressBar.SetValueWithoutNotify(progress);
+            yield return null;
+        }
+        curScene = SceneManager.GetSceneByName(newScene);
         
     }
 
-    
+    public void loadClueObjects()
+    {
+        // whoDidIt = 0 = friend
+        // whoDidIt = 1 = Crane
+        // whoDidIt = 2 = Burch
+            // Burch child 0 = Did do it
+            // Burch child 1 = Did not do it
+
+
+        toggableLights.SetActive(false);
+        clueObjects.transform.GetChild(2).gameObject.SetActive(true);
+        if (whoDidIt.Equals(2))
+        {
+            clueObjects.transform.GetChild(2).GetChild(0).gameObject.SetActive(true);
+            clueObjects.transform.GetChild(2).GetChild(1).gameObject.SetActive(false);
+            clueObjects.transform.GetChild(0).gameObject.SetActive(false);
+            clueObjects.transform.GetChild(1).gameObject.SetActive(false);
+        }
+        else
+        {
+            clueObjects.transform.GetChild(whoDidIt).gameObject.SetActive(true);
+            clueObjects.transform.GetChild(2).GetChild(1).gameObject.SetActive(true);
+
+            clueObjects.transform.GetChild(Math.Abs(whoDidIt-1)).gameObject.SetActive(false);
+            clueObjects.transform.GetChild(2).GetChild(0).gameObject.SetActive(false);
+        }
+        if (whoDidIt.Equals(1))
+        {
+            toggableLights.SetActive(true);
+        }
+    }
     // Update is called once per frame
     void Update()
     {
         
         
     }
+
+    
 
     public void pauseGame()
     {
@@ -207,10 +306,22 @@ public class GameManager : MonoBehaviour
     {
 
         game = name;
-        
+
         if (!lerping)
         {
-            if (name.Equals("office ispy"))
+            lastpos = cam.transform.position;
+            lastrot = cam.transform.rotation;
+            if (name.Equals("apartment ispy"))
+            {
+
+                cam.transform.position = new Vector3(-88.4400024f, 11.9799995f, -18.2500267f);
+                cam.transform.rotation = Quaternion.Euler(0, 180f, 0);
+                StartCoroutine(FadeOutMusic(currentMusic));
+                StartCoroutine(FadeInMusic(IspyMusic));
+                cam.orthographicSize = 13.5f;
+
+            }
+            else if (name.Equals("office ispy"))
             {
 
                 cam.transform.position = new Vector3(-4f, 12f, -22f);
@@ -220,9 +331,36 @@ public class GameManager : MonoBehaviour
                 cam.orthographicSize = 13.5f;
 
             }
+            else if (name.Equals("museum ispy"))
+            {
+                cam.transform.position = new Vector3(-152.56752f, 12.3245363f, -41.417923f);
+                cam.transform.rotation = Quaternion.Euler(0, 180f, 0);
+                StartCoroutine(FadeOutMusic(currentMusic));
+                StartCoroutine(FadeInMusic(IspyMusic));
+                cam.orthographicSize = 13.5f;
+
+            }
+            else if (name.Equals("apartment jigsaw"))
+            {
+                cam.transform.position = new Vector3(-3.43000007f, -59.2799988f, -28.0927353f);
+                cam.transform.rotation = Quaternion.Euler(0, 0f, 0);
+                cam.orthographicSize = 15f;
+                cam.GetComponent<DragAndDrop>().enabled = true;
+                StartCoroutine(FadeOutMusic(currentMusic));
+                StartCoroutine(FadeInMusic(JigsawMusic));
+            }
             else if (name.Equals("office jigsaw"))
             {
                 cam.transform.position = new Vector3(-5.71000004f, -95.5100021f, -52.3827896f);
+                cam.transform.rotation = Quaternion.Euler(0, 0f, 0);
+                cam.orthographicSize = 15f;
+                cam.GetComponent<DragAndDrop>().enabled = true;
+                StartCoroutine(FadeOutMusic(currentMusic));
+                StartCoroutine(FadeInMusic(JigsawMusic));
+            }
+            else if (name.Equals("museum jigsaw"))
+            {
+                cam.transform.position = new Vector3(-2.6400001f, -25.0900002f, -36.5200005f);
                 cam.transform.rotation = Quaternion.Euler(0, 0f, 0);
                 cam.orthographicSize = 15f;
                 cam.GetComponent<DragAndDrop>().enabled = true;
@@ -237,17 +375,19 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(JigsawMusic));
             }
-            else if (name.Equals("and i was there"))
+            else if (name.Equals("apartment pbn"))
             {
-                cam.transform.position = new Vector3(26.75f, 45.48f, -20.54f);
+
+                cam.transform.position = new Vector3(29.2000008f, 45.2999992f, -26.8999996f);
                 cam.transform.rotation = Quaternion.Euler(0, 0, 0);
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(PBNMusic));
                 pbnCounterLimit = 44;
+                cam.orthographicSize = 13.5f;
             }
             else if (name.Equals("office pbn"))
             {
-                
+
                 cam.transform.position = new Vector3(47.640728f, 42.3699989f, -153.841095f);
                 cam.transform.rotation = Quaternion.Euler(0, 0, 0);
                 StartCoroutine(FadeOutMusic(currentMusic));
@@ -263,10 +403,17 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(FadeInMusic(PBNMusic));
                 pbnCounterLimit = 78;
             }
-            
+
             else if (name.Equals("crossing"))
             {
                 cam.transform.position = new Vector3(59.5f, 10.2f, -9.6f);
+                cam.transform.rotation = Quaternion.Euler(0, 0, 0);
+                StartCoroutine(FadeOutMusic(currentMusic));
+                StartCoroutine(FadeInMusic(TileMusic));
+            }
+            else if (name.Equals("apartment tile"))
+            {
+                cam.transform.position = new Vector3(64.1976471f, 110.110001f, 125.779999f);
                 cam.transform.rotation = Quaternion.Euler(0, 0, 0);
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(TileMusic));
@@ -278,16 +425,40 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(TileMusic));
             }
+            else if (name.Equals("museum tile1"))
+            {
+                
+                cam.transform.position = new Vector3(64.3500595f, 59.959999f, 127.110001f);
+                cam.transform.rotation = Quaternion.Euler(0, 0, 0);
+                StartCoroutine(FadeOutMusic(currentMusic));
+                StartCoroutine(FadeInMusic(TileMusic));
+            }
+            else if (name.Equals("museum tile2"))
+            {
+
+                cam.transform.position = new Vector3(64.3600006f, 135.020004f, 126.650002f);
+                cam.transform.rotation = Quaternion.Euler(0, 0, 0);
+                StartCoroutine(FadeOutMusic(currentMusic));
+                StartCoroutine(FadeInMusic(TileMusic));
+            }
 
             displayInfoText();
             cam.orthographic = true;
-            if (name.Equals("crossing") || name.Equals("office tile"))
+            if (name.Equals("crossing") || name.Equals("apartment tile") || name.Equals("office tile") || name.Equals("museum tile1") || name.Equals("museum tile2"))
             {
                 cam.orthographic = false;
                 if (!tileSlideStarted)
                 {
-                    slider.GetComponent<ST_PuzzleDisplay>().actualStart();
-                    tileSlideStarted = true;
+                    if (name.Equals("museum tile2"))
+                    {
+                        slider2.GetComponent<ST_PuzzleDisplay>().actualStart();
+                        tileSlideStarted = true;
+                    }
+                    else
+                    {
+                        slider.GetComponent<ST_PuzzleDisplay>().actualStart();
+                        tileSlideStarted = true;
+                    }
                 }
 
             }
@@ -382,7 +553,9 @@ public class GameManager : MonoBehaviour
     public void tileComplete()
     {
         curPaint.GetComponent<SpriteRenderer>().sprite = curPaint.GetComponent<Transition>().goodPic;
+        curPaint.GetComponent<SpriteRenderer>().transform.localScale = Vector3.one;
         completedGames += 1;
+        tileSlideStarted = false;
         quitGame();
         
         
@@ -401,7 +574,8 @@ public class GameManager : MonoBehaviour
         }
         curPaint.GetComponent<SpriteRenderer>().sprite = curPaint.GetComponent<Transition>().goodPic;
         completedGames += 1;
-        
+        curPaint.GetComponent<SpriteRenderer>().transform.localScale = Vector3.one;
+
         return true;
     }
 
@@ -447,19 +621,56 @@ public class GameManager : MonoBehaviour
     }
     public void quitGame()
     {
+        cam.transform.position = lastpos;
+        cam.transform.rotation = lastrot;
         returnButton.gameObject.active = false;
         cam.GetComponent<DragAndDrop>().enabled = false;
-        cam.transform.rotation = camStartRot;
         cam.orthographic = false;
-        cam.transform.position = camStartPos;
         curPaint.GetComponent<Transition>().lerp = true;
         curPaint.GetComponent<Transition>().forward = false;
         curPaint.GetComponent<Transition>().stageOne = true;
         StartCoroutine(FadeOutMusic(currentMusic));
         StartCoroutine(FadeInMusic(GalleryMusic));
         pbnCounter = 0;
-         
+        UnityEngine.Cursor.visible = true;
+        if ((completedGames > 0&& curScene.name != "Museum"))
+        {
+            nextLevelButton.gameObject.SetActive(true);
+        }
+        else if (nextLevelButton)
+        {
+            nextLevelButton.gameObject.SetActive(false);
+        }
+    }
 
+    public void resetCam()
+    {
+        cam.transform.rotation = camStartRot;
+        cam.orthographic = false;
+        cam.transform.position = camStartPos;
+    }
+
+
+    public List<List<float>> getJigsawRange(string n)
+    {
+        List<List<float>> total = new List<List<float>>();
+        List<float> outer = new List<float>();
+        List<float> inner = new List<float>();
+        if (n.Equals("museum jigsaw"))
+        {
+            outer.Add(-7f);
+            outer.Add(7f);
+            outer.Add(-20f);
+            outer.Add(-30f);
+            inner.Add(-5f);
+            inner.Add(5f);
+            inner.Add(-22f);
+            inner.Add(-28);
+            total.Add(outer);
+            total.Add(inner);
+            return total;
+        }
+        return total;
     }
 
     

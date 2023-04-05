@@ -61,7 +61,7 @@ public class ClickDetection : MonoBehaviour
                 
 
             }
-            else if ((GameManager.Instance.getGame() == "and i was there") || (GameManager.Instance.getGame() == "office pbn") || (GameManager.Instance.getGame() == "museum pbn"))
+            else if ((GameManager.Instance.getGame() == "apartment pbn") || (GameManager.Instance.getGame() == "office pbn") || (GameManager.Instance.getGame() == "museum pbn"))
             {
                 Debug.Log(-2);
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -113,6 +113,7 @@ public class ClickDetection : MonoBehaviour
         Vector3 worldmouseposnear = Camera.main.ScreenToWorldPoint(screenmouseposnear);
         RaycastHit hit;
         Physics.Raycast(worldmouseposnear, worldmouseposfar - worldmouseposnear, out hit);
+        Debug.DrawRay(worldmouseposnear, worldmouseposfar - worldmouseposnear, Color.red);
         return hit;
     }
 

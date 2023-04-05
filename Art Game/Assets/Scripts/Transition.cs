@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Mail;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.TerrainTools;
+using UnityEngine.SceneManagement;
 
 public class Transition : MonoBehaviour
 {
@@ -24,6 +26,7 @@ public class Transition : MonoBehaviour
     private Vector3 paintoriPos;
     private Quaternion paintoriRot;
     private Camera cam;
+    private string scene;
     // Start is called before the first frame update
     void Start()
     {
@@ -33,9 +36,10 @@ public class Transition : MonoBehaviour
         paintRot = transform.localRotation;
         GameObject c = GameObject.Find("Camera");
         cam = c.GetComponent<Camera>();
-        camoriPos = GameManager.Instance.camStartPos;
-        camoriRot = GameManager.Instance.camStartRot;
+        camoriPos = cam.transform.position;
+        camoriRot = cam.transform.rotation;
         stageOne = true;
+
     }
 
     // Update is called once per frame
@@ -46,6 +50,12 @@ public class Transition : MonoBehaviour
             if (forward)
             {
                 Vector3 targetCameraPosition = transform.position + transform.forward * 2f;
+                scene = SceneManager.GetActiveScene().name;
+                if (scene == "Museum")
+                {
+                    targetCameraPosition = transform.position + -transform.forward * 2f;
+                }
+                
 
                 // Lerp the camera's position towards the target position
                 cam.transform.position = Vector3.Lerp(cam.transform.position, targetCameraPosition, Time.deltaTime * 1.2f);
