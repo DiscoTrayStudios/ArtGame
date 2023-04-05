@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour
     public AudioSource JigsawMusic;
     public AudioSource PBNMusic;
     public int whoDidIt;
+    public GameObject clueObjects;
     private AudioSource currentMusic; 
 
 
@@ -111,7 +112,8 @@ public class GameManager : MonoBehaviour
         StartCoroutine(FadeInMusic(MainMenuMusic));
         AudioListener.volume = 0.3f;
         resumeButton = pauseScreen.transform.GetChild(2).gameObject;
-        
+        loadClueObjects();
+
     }
     
 
@@ -145,9 +147,33 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
         curScene = SceneManager.GetSceneByName(newScene);
+        
     }
 
+    public void loadClueObjects()
+    {
+        // whoDidIt = 0 = friend
+        // whoDidIt = 1 = Crane
+        // whoDidIt = 2 = Burch
+            // Burch child 0 = Did do it
+            // Burch child 1 = Did not do it
+        clueObjects.transform.GetChild(2).gameObject.SetActive(true);
+        if (whoDidIt.Equals(2))
+        {
+            clueObjects.transform.GetChild(2).GetChild(0).gameObject.SetActive(true);
+            clueObjects.transform.GetChild(2).GetChild(1).gameObject.SetActive(false);
+            clueObjects.transform.GetChild(0).gameObject.SetActive(false);
+            clueObjects.transform.GetChild(1).gameObject.SetActive(false);
+        }
+        else
+        {
+            clueObjects.transform.GetChild(whoDidIt).gameObject.SetActive(true);
+            clueObjects.transform.GetChild(2).GetChild(1).gameObject.SetActive(true);
 
+            clueObjects.transform.GetChild(Math.Abs(whoDidIt-1)).gameObject.SetActive(false);
+            clueObjects.transform.GetChild(2).GetChild(0).gameObject.SetActive(false);
+        }
+    }
     // Update is called once per frame
     void Update()
     {
