@@ -63,6 +63,7 @@ public class GameManager : MonoBehaviour
     private float startTime;
     private bool gamePaused = false;
     private GameObject resumeButton;
+    private bool completed_game_just_now = false;
     
     private Vector3 lastpos;
     private Quaternion lastrot;
@@ -72,6 +73,18 @@ public class GameManager : MonoBehaviour
     private Scene curScene;
     private ProgressBar progressBar;
     private string newScene;
+
+    public GameObject dialogueCanvasObject;
+    private Office_Dialogue office_Dialogue;
+    private Museum_Dialogue museum_Dialogue;
+    private List<Tuple<string, string, string>> dialogueList;
+    private string fullDialogueText;
+    private string whoIsSpeaking;
+    private bool isTyping = false;
+    private int currentDialogueIndex;
+    private TextMeshPro dialogueText;
+
+    public GameObject dialogueObject;
 
     private void Awake()
     {
@@ -114,6 +127,9 @@ public class GameManager : MonoBehaviour
         AudioListener.volume = 0.3f;
         resumeButton = pauseScreen.transform.GetChild(2).gameObject;
         loadClueObjects();
+        office_Dialogue = new Office_Dialogue();
+        museum_Dialogue = new Museum_Dialogue();
+        dialogueText = dialogueObject.GetComponent<TextMeshPro>();
 
     }
     
@@ -182,14 +198,74 @@ public class GameManager : MonoBehaviour
             toggableLights.SetActive(true);
         }
     }
+    
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (isTyping)
+            {
+                StopCoroutine("typeText");
+                dialogueText.text = fullDialogueText;
+                isTyping = false;
+            }
+            else
+            {
+                if (currentDialogueIndex < dialogueList.Count) {
+                    fullDialogueText = dialogueList[currentDialogueIndex].Item3;
+                    currentDialogueIndex += 1;
+                    StartCoroutine("typeText");
+                }
+                else
+                {
+                    quitDialogue();
+                }
+            }
+        }
         
     }
 
-    
+    public void completed_game_dialogue()
+    {
+        dialogueCanvasObject.SetActive(true);
+        currentDialogueIndex = 0;
+        if (completedGames == 1)
+        {
+            if (curScene.name.Equals("Office"))
+            {
+                dialogueList.Clear();
+                dialogueList = office_Dialogue.get_dialogue(completedGames, whoDidIt);
+                currentDialogueIndex = 0;
+                fullDialogueText = dialogueList[currentDialogueIndex].Item3;
+                canClickOnPainting = false;
+            }
+            else
+            {
+                dialogueCanvasObject.SetActive(false);
+            }
+        }
+    }
+    public void quitDialogue()
+    {
+        canClickOnPainting = true;
+        dialogueCanvasObject.SetActive(false);
+    }
+
+    private IEnumerator typeText()
+    {
+        isTyping = true;
+        dialogueText.text = "";
+        foreach (char c in fullDialogueText)
+        {
+            dialogueText.text += c;
+            yield return new WaitForSeconds(0.1f);
+        }
+        isTyping = false;
+        yield return null;
+
+
+    }
 
     public void pauseGame()
     {
@@ -488,6 +564,7 @@ public class GameManager : MonoBehaviour
                 //TODO ADD THIS BACK IN
                 curPaint.GetComponent<SpriteRenderer>().sprite = curPaint.GetComponent<Transition>().goodPic;
                 completedGames += 1;
+                completed_game_just_now = true;
                 quitGame();
                         
                         
@@ -519,6 +596,7 @@ public class GameManager : MonoBehaviour
                 {
                     curPaint.GetComponent<SpriteRenderer>().sprite = curPaint.GetComponent<Transition>().goodPic;
                     completedGames += 1;
+                    completed_game_just_now = true;
                     quitGame();
                     
                     
@@ -540,6 +618,7 @@ public class GameManager : MonoBehaviour
                 {
                     curPaint.GetComponent<SpriteRenderer>().sprite = curPaint.GetComponent<Transition>().goodPic;
                     completedGames += 1;
+                    completed_game_just_now = true;
                     quitGame();
                     
                     
@@ -556,6 +635,7 @@ public class GameManager : MonoBehaviour
         curPaint.GetComponent<SpriteRenderer>().transform.localScale = Vector3.one;
         completedGames += 1;
         tileSlideStarted = false;
+        completed_game_just_now = true;
         quitGame();
         
         
@@ -574,6 +654,7 @@ public class GameManager : MonoBehaviour
         }
         curPaint.GetComponent<SpriteRenderer>().sprite = curPaint.GetComponent<Transition>().goodPic;
         completedGames += 1;
+        completed_game_just_now = true;
         curPaint.GetComponent<SpriteRenderer>().transform.localScale = Vector3.one;
 
         return true;
@@ -633,6 +714,11 @@ public class GameManager : MonoBehaviour
         StartCoroutine(FadeInMusic(GalleryMusic));
         pbnCounter = 0;
         UnityEngine.Cursor.visible = true;
+        if (completed_game_just_now)
+        {
+            completed_game_just_now = false;
+            completed_game_dialogue();
+        }
         if ((completedGames > 0&& curScene.name != "Museum"))
         {
             nextLevelButton.gameObject.SetActive(true);
@@ -642,6 +728,8 @@ public class GameManager : MonoBehaviour
             nextLevelButton.gameObject.SetActive(false);
         }
     }
+
+    
 
     public void resetCam()
     {
