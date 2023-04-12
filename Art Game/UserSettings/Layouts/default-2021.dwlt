@@ -97,7 +97,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 221}
   m_MaxSize: {x: 4000, y: 4021}
   vertical: 0
-  controlID: 75
+  controlID: 29
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -122,7 +122,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 30
+  controlID: 129
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -142,8 +142,8 @@ MonoBehaviour:
     y: 0
     width: 496
     height: 947
-  m_MinSize: {x: 275, y: 50}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 276, y: 71}
+  m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 18}
   m_Panes:
   - {fileID: 18}
@@ -297,7 +297,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 31
+  controlID: 17
 --- !u!114 &13
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -478,22 +478,22 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scenes
+    - Assets/Scripts/Dialogue
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scenes
+  - Assets/Scripts/Dialogue
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\theia\Github\ArtGame\Art Game
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 6e7d0000
-    m_LastClickedID: 32110
-    m_ExpandedIDs: 00000000e47c0000e67c0000e87c0000ea7c0000ec7c0000ee7c0000f07c0000f27c0000f47c0000f67c0000f87c0000fa7c0000fc7c0000fe7c0000007d0000027d0000047d0000067d00000a7d00000c7d0000107d0000127d00001cb006009ab00600eab00600f0b00600f4b0060002b10600f4b20600
+    m_SelectedIDs: 548f0000
+    m_LastClickedID: 36692
+    m_ExpandedIDs: 00000000327d0000347d0000367d0000387d00003a7d00003c7d00003e7d0000407d0000427d0000447d0000467d0000487d00004a7d00004c7d00004e7d0000507d0000527d0000547d0000567d0000587d00005a7d00005c7d00005e7d0000607d0000627d0000647d0000667d0000687d00006a7d0000ce7d0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -521,7 +521,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000e47c0000e67c0000e87c0000ea7c0000ec7c0000ee7c0000f07c0000f27c0000f47c0000f67c0000f87c0000fa7c0000fc7c0000fe7c0000007d0000027d0000047d0000067d0000087d00000a7d00000c7d00000e7d0000107d0000127d0000
+    m_ExpandedIDs: 00000000327d0000347d0000367d0000387d00003a7d00003c7d00003e7d0000407d0000427d0000447d0000467d0000487d00004a7d00004c7d00004e7d0000507d0000527d0000547d0000567d0000587d00005a7d00005c7d00005e7d0000607d0000627d0000647d0000667d0000687d00006a7d0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -651,9 +651,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 7c7d0000
+      m_SelectedIDs: 3c900000
       m_LastClickedID: 0
-      m_ExpandedIDs: ea47f9ffce4df9ff9c51f9ff2657f9ff5a5df9ff1c61f9ff2285f9ff968bf9ff5a8df9ff9622faff6426faff1c2afaff2835faffe453faffa640fdff9658fdff3e64fdffc668fdff186cfdff806ffdff5a75fdffc278fdff2093fdff969afdff729ffdff72a4fdff2aa8fdff04acfdff4cc1fdff46ddfdff2ceefdffacfbfdfff809feffb618feff8c29feffd641feffae46feffbc4bfeffe657feff0c63feff7466feffc669feffa66dfeffc47dfeff0e87feff1096feff10a7fefff0b4feffdacbfeff42cffeff5ad8feff9cddfeff6ee4feffecf6feffecfdfeff4210ffffa21cffffa82bffff4032ffff8a37ffff5e3effffc841ffff42eeffff04fbfffff4ffffff5a72000002740000c4740000567500002478000040a30000d2a30000d6400100d841010028460100844b01004e4d01004a5f01004c6001009c640100f8690100c26b010028d40100bad4010016e10100d8e60100ba0f02004c100200e44602000e470200b04c02004e94020078940200f46703008668030086060400da0704001a2e0400442e0400269b0400e89b0400709c04007a9c0400eab6040014b70400acbc0400a4bd040066e40400f8e40400aaf004004af104007afd0400ea170500b2ca050022cb0500becd050012d2050094d40500fcc20600f0c50600caca0600c2cf060024e40600b2e60600be130700c61a0700c01f0700
+      m_ExpandedIDs: 04fbffff886c0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -903,9 +903,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -86.8119, y: 7.55345, z: 72.90743}
+    m_Target: {x: -71.16779, y: 2.6939454, z: 64.51712}
     speed: 2
-    m_Value: {x: -86.8119, y: 7.55345, z: 72.90743}
+    m_Value: {x: -71.16779, y: 2.6939454, z: 64.51712}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -952,13 +952,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.15978111, y: -0.457592, z: 0.083977275, w: 0.8706488}
+    m_Target: {x: 0.2033402, y: -0.26719517, z: 0.057789538, w: 0.94016904}
     speed: 2
-    m_Value: {x: 0.15847482, y: -0.45771703, z: 0.08329071, w: 0.8708867}
+    m_Value: {x: 0.20334041, y: -0.26719543, z: 0.057789598, w: 0.94017}
   m_Size:
     m_Target: 4.2579303
     speed: 2
-    m_Value: 4.0745745
+    m_Value: 4.2579303
   m_Ortho:
     m_Target: 0
     speed: 2
