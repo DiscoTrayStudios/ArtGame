@@ -75,14 +75,17 @@ public class GameManager : MonoBehaviour
     private string newScene;
 
     public GameObject dialogueCanvasObject;
+    private Start_Dialogue start_Dialogue;
+    private Friend_Dialogue friend_Dialogue;
     private Office_Dialogue office_Dialogue;
     private Museum_Dialogue museum_Dialogue;
+    private End_Dialogue end_Dialogue;
     private List<Tuple<string, string, string>> dialogueList;
     private string fullDialogueText;
     private string whoIsSpeaking;
     private bool isTyping = false;
     private int currentDialogueIndex;
-    private TextMeshPro dialogueText;
+    private TextMeshProUGUI dialogueText;
 
     public GameObject dialogueObject;
 
@@ -127,9 +130,14 @@ public class GameManager : MonoBehaviour
         AudioListener.volume = 0.3f;
         resumeButton = pauseScreen.transform.GetChild(2).gameObject;
         loadClueObjects();
-        office_Dialogue = new Office_Dialogue();
+        start_Dialogue  = new Start_Dialogue();
+        friend_Dialogue = new Friend_Dialogue();
+        office_Dialogue  = new Office_Dialogue();
         museum_Dialogue = new Museum_Dialogue();
-        dialogueText = dialogueObject.GetComponent<TextMeshPro>();
+        end_Dialogue    = new End_Dialogue();
+        dialogueText = dialogueObject.GetComponent<TextMeshProUGUI>();
+        
+
 
     }
     
@@ -169,7 +177,7 @@ public class GameManager : MonoBehaviour
 
     public void loadClueObjects()
     {
-        // whoDidIt = 0 = friend
+        // whoDidIt = 0 = Kristen
         // whoDidIt = 1 = Crane
         // whoDidIt = 2 = Burch
             // Burch child 0 = Did do it
@@ -202,24 +210,26 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (isTyping)
+        if (dialogueCanvasObject.active){
+            if (Input.GetMouseButtonDown(0))
             {
-                StopCoroutine("typeText");
-                dialogueText.text = fullDialogueText;
-                isTyping = false;
-            }
-            else
-            {
-                if (currentDialogueIndex < dialogueList.Count) {
-                    fullDialogueText = dialogueList[currentDialogueIndex].Item3;
-                    currentDialogueIndex += 1;
-                    StartCoroutine("typeText");
+                if (isTyping)
+                {
+                    StopCoroutine("typeText");
+                    dialogueText.text = fullDialogueText;
+                    isTyping = false;
                 }
                 else
                 {
-                    quitDialogue();
+                    if (currentDialogueIndex < dialogueList.Count) {
+                        fullDialogueText = dialogueList[currentDialogueIndex].Item3;
+                        currentDialogueIndex += 1;
+                        StartCoroutine("typeText");
+                    }
+                    else
+                    {
+                        quitDialogue();
+                    }
                 }
             }
         }
@@ -239,6 +249,7 @@ public class GameManager : MonoBehaviour
                 currentDialogueIndex = 0;
                 fullDialogueText = dialogueList[currentDialogueIndex].Item3;
                 canClickOnPainting = false;
+                StartCoroutine("typeText");
             }
             else
             {
@@ -259,7 +270,7 @@ public class GameManager : MonoBehaviour
         foreach (char c in fullDialogueText)
         {
             dialogueText.text += c;
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.03f);
         }
         isTyping = false;
         yield return null;
@@ -346,6 +357,12 @@ public class GameManager : MonoBehaviour
         pauseScreen.gameObject.SetActive(true);
         StartCoroutine(FadeOutMusic(MainMenuMusic));
         StartCoroutine(FadeInMusic(GalleryMusic));
+        dialogueCanvasObject.SetActive(true);
+        dialogueList = start_Dialogue.get_dialogue(completedGames, whoDidIt);
+        currentDialogueIndex = 0;
+        fullDialogueText = dialogueList[currentDialogueIndex].Item3;
+        canClickOnPainting = false;
+        StartCoroutine("typeText");
     }
 
     public void credits()
@@ -656,7 +673,7 @@ public class GameManager : MonoBehaviour
         completedGames += 1;
         completed_game_just_now = true;
         curPaint.GetComponent<SpriteRenderer>().transform.localScale = Vector3.one;
-
+        // pieces.transform.parent.parent.gameObject.GetComponent<BoxCollider>().active = false;
         return true;
     }
 

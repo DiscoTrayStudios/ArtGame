@@ -57,7 +57,6 @@ public class Snap : MonoBehaviour
             transform.localPosition = tempPos;
             if (Physics.Raycast(transform.position, transform.forward, out hit, 5))
             {
-                Debug.Log(hit.collider.gameObject.name);
                 if (hit.collider.gameObject.name.Equals(target.name))
                 {
                     break;
