@@ -92,6 +92,7 @@ public class GameManager : MonoBehaviour
     private bool isTooLong = false;
     private bool isWaitingBetweenChars = false;
     private float timeBetweenChars = 0.03f;
+    private bool isIntro = true;
     private int currentDialogueIndex;
     private TextMeshProUGUI dialogueText;
     private TextMeshProUGUI nameText;
@@ -401,12 +402,20 @@ public class GameManager : MonoBehaviour
     }
     public void quitDialogue()
     {
-        canClickOnPainting = true;
-        dialogueCanvasObject.SetActive(false);
-        foreach (Transform child in peopleObject.transform)
+        if (isIntro) 
         {
-            child.gameObject.GetComponent<UnityEngine.UI.Image>().sprite = null;
-            child.gameObject.SetActive(false);
+            isIntro = false;
+            completed_game_dialogue();
+        }
+        else
+        {
+            canClickOnPainting = true;
+            dialogueCanvasObject.SetActive(false);
+            foreach (Transform child in peopleObject.transform)
+            {
+                child.gameObject.GetComponent<UnityEngine.UI.Image>().sprite = null;
+                child.gameObject.SetActive(false);
+            }
         }
     }
 
