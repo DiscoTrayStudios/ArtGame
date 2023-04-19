@@ -17,16 +17,9 @@ public class End_Dialogue : MonoBehaviour
     {
         if (completed_games == 0)
         {
-            return pre_paintings(whoDunIt);
+            return start_of_end(whoDunIt);
         }
-        else if (completed_games == 1)
-        {
-            return first_painting_done(whoDunIt);
-        }
-        else if (completed_games == 2)
-        {
-            return second_painting_done(whoDunIt);
-        }
+        
         else if (completed_games == 3)
         {
             return third_painting_done(whoDunIt);
@@ -41,39 +34,89 @@ public class End_Dialogue : MonoBehaviour
             return leaving(whoDunIt);
         }
     }
-    public List<Tuple<string,string, string>> pre_paintings(int whoDunIt)
+    public List<Tuple<string,string, string>> start_of_end(int whoDunIt)
     {
         List<Tuple<string, string, string>> response = new List<Tuple<string,string, string>>();
         
-        response.Add(new Tuple<string,string,string>("main","normal","Hey Professor, long time no see!"));
-        response.Add(new Tuple<string, string, string>("crane", "surprised", "OH! You frightened me! Please don't sneak up on me like that again. What are you doing here?"));
-        response.Add(new Tuple<string, string, string>("main", "norma", "I heard what happened to you. weirdest thing is it's not just you, happened to a friend of mine."));
-        response.Add(new Tuple<string, string, string>("Crane","normal","Yes it's very unsettling. I hate to hear it happened to more. Is there any way you could help me out?"));
-        response.Add(new Tuple<string, string, string>("main", "normal","Yeah for sure! But I can't do these for free, I've already lost money tonight."));
+        response.Add(new Tuple<string,string,string>("main","normal","Thank you all for coming down. It seems like you are the only three to be effected by this vandalizer, and I want to let you know that I believe I have figured out who the criminal is."));
+        response.Add(new Tuple<string, string, string>("main", "normal", "It is one of you."));
+        response.Add(new Tuple<string, string, string>("Kristen", "shocked", "What?"));
+        response.Add(new Tuple<string, string, string>("Crane","shocked","How can..."));
+        response.Add(new Tuple<string, string, string>("Burch", "shocked","There is no way..."));
+        response.Add(new Tuple<string, string, string>("Everyone", "angry", "<I> They all stare at one another accusingly"));
+        response.Add(new Tuple<string, string, string>("Kristen", "shocked", "Well you know it can't be me! We've been friends for years you know me!"));
+        response.Add(new Tuple<string, string, string>("Crane", "angry", "Why would I do it? Risk my career?!"));
+        response.Add(new Tuple<string, string, string>("Burch", "shocked", "My business already isn't doing well. Why would I sneak off into the night to destroy others and my paintings?"));
+        response.Add(new Tuple<string, string, string>("main", "normal", "Listen. You all have your reasons why you wouldn't and why you would."));
+        // May want to add more here, but pick after
+
         return response;
     }
 
-    public List<Tuple<string, string, string>> first_painting_done(int whoDunIt)
+    public List<Tuple<string, string, string>> picked_kristen(int whoDunIt)
     {
         List<Tuple<string, string, string>> response = new List<Tuple<string, string, string>>();
-        response.Add(new Tuple<string, string, string>("main", "normal", "So where were you at? I thought you preferred catching up with work at night?"));
-        response.Add(new Tuple<string, string, string>("crane", "angry", "Oh I was at that art show Dr. Burch is hosting. I submitted some of my peices but didn't find any of them hanging up. I talked to her and she claimed they weren't good enough! I come back here to take my mind off of things and this mess was here!"));
-        response.Add(new Tuple<string, string, string>("main", "normal", "<I> Yeah, because this is so much worse than the disorganised mess you usually have."));
-        response.Add(new Tuple<string, string, string>("main", "normal", "Weird, that's where my friend was as well..."));
+        if (whoDunIt > 0)
+        {
+            response.Add(new Tuple<string, string, string>("Kristen", "angry", "Really? You genuinley think I could do that? I said I went out to dinner, why didn't you believe me? I thought we were friends"));
+            response.Add(new Tuple<string, string, string>("Kristen", "normal", "<L> She storms out of the building before you can say anything, and you feel in your heart you got it wrong."));
+        }
+        else
+        {
+            response.Add(new Tuple<string, string, string>("Kristen", "shocked", "What! Me? But I... I couldn't... *sigh*"));
+            response.Add(new Tuple<string, string, string>("Kristen", "angry", "Ugh. Fine. Yeah, it was me. I did it, way to go. Crane got what he deserved. Just because you hate your job and aren't good at your hobbies doesn't give you the right to fail students for no good reason."));
+            response.Add(new Tuple<string, string, string>("Crane", "shocked", "I don't think that's fai..."));
+            response.Add(new Tuple<string, string, string>("Burch", "angry", "WHY DID YOU DESTROY MY ART!?"));
+            response.Add(new Tuple<string, string, string>("Kristen", "happy", "You made it too easy. Leaving the doors unlocked while you go get a coffee every night? You didn't deserve it like he did, but I'm not heartbroken about it."));
+
+        }
+
         return response;
     }
 
-    public List<Tuple<string, string, string>> second_painting_done(int whoDunIt)
+    public List<Tuple<string, string, string>> picked_crane(int whoDunIt)
     {
         List<Tuple<string, string, string>> response = new List<Tuple<string, string, string>>();
-        response.Add(new Tuple<string, string, string>("crane", "happy", "<I> ...mumbling quiety..."));
-        response.Add(new Tuple<string, string, string>("main", "normal", "What was that?"));
-        response.Add(new Tuple<string, string, string>("crane", "happy","Oh nothing, just saying that she got what she deserved."));
-        response.Add(new Tuple<string, string, string>("main", "normal", "Kristen? That's a bit harsh"));
-        response.Add(new Tuple<string, string, string>("crane", "normal", "No No! I have nothing against her. The museum curator also got a visit from our new 'Modern artist'. Some of her paintings were destroyed as well."));
-        response.Add(new Tuple<string, string, string>("main", "normal", "<I> What is going on!?"));
-        response.Add(new Tuple<string, string, string>("main", "normal", "Oh no! I'll go see if she can tell me anything about what happened."));
-        return response; 
+        if (whoDunIt == 1)
+        {
+            response.Add(new Tuple<string, string, string>("Crane", "angry", "Okay okay okay, I admit it. I did it. I was so mad at what you had said about my work, Dr. Burch, that I went back and destroyed them all. I realized then that I shouldn't be the only one to suffer. Kristen, I do apologize to you. I thought I could get away with it witha  third victim, and you made it obvious that you weren't home with that ridiculous blog of yours."));
+            response.Add(new Tuple<string, string, string>("Burch", "normal", "I guess I could have been nicer about it..."));
+            response.Add(new Tuple<string, string, string>("Kristen", "angry", "Uh screw you. My blog is perfect and so was my art until you ruined it! What a sad man you are."));
+
+        }
+        else
+        {
+            response.Add(new Tuple<string, string, string>("Crane", "shocked", "I really took you as a better person. I went to my night class for art lessons. Burch's words hurt me but I wanted to prove her wrong with my art, not malicious actions."));
+            response.Add(new Tuple<string, string, string>("Crane", "normal", "I'm dissapointed in you. Thank you for fixing my art, but please don't come back by."));
+            response.Add(new Tuple<string, string, string>("Crane", "normal", "<L> He walks out of the building, hurt you would accuse him of that."));
+
+
+
+        }
+
+        return response;
+    }
+
+    public List<Tuple<string, string, string>> picked_burch(int whoDunIt)
+    {
+        List<Tuple<string, string, string>> response = new List<Tuple<string, string, string>>();
+        if (whoDunIt ==2)
+        {
+            response.Add(new Tuple<string, string, string>("Burch", "happy", "And I would gladly do it again. Kristen, you've cost me thousands with your pretentious blog. I invited you tonight because I know you always go to eat out after an art show for the 'vibes'. What does that even mean? It was almost perfect. I destryoed yours because I hate you, mine for an alibi and insurance, and Crane your art is just bad so I don't really feel guilty about that."));
+            response.Add(new Tuple<string, string, string>("Kristen", "shocked", "Wow. You are a monster..."));
+            response.Add(new Tuple<string, string, string>("Crane", "shocked", "How can you possibly be so cruel?"));
+
+
+
+        }
+        else
+        {
+            response.Add(new Tuple<string, string, string>("Burch", "shocked", "I said she was bad for business, but that is not enough for you to accuse me of mass vandalism and insurance fraud!"));
+            response.Add(new Tuple<string, string, string>("Burch", "angry", "I can't believe you would accuse me of something like this in my own museum. You can try again to figure out who it is, but I'm not staying anymore."));
+            response.Add(new Tuple<string, string, string>("Burch", "normal", "<L> She walks out of the room, reasonably annoyed given the situation."));
+        }
+
+        return response;
     }
 
     public List<Tuple<string, string, string>> third_painting_done(int whoDunIt)
