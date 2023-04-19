@@ -46,7 +46,7 @@ public class Office_Dialogue : MonoBehaviour
         List<Tuple<string, string, string>> response = new List<Tuple<string,string, string>>();
         
         response.Add(new Tuple<string,string,string>("main","normal","Hey Professor, long time no see!"));
-        response.Add(new Tuple<string, string, string>("crane", "surprised", "OH! You frightened me! Please don't sneak up on me like that again. What are you doing here?"));
+        response.Add(new Tuple<string, string, string>("Crane", "surprised", "OH! You frightened me! Please don't sneak up on me like that again. What are you doing here?"));
         response.Add(new Tuple<string, string, string>("main", "norma", "I heard what happened to you. weirdest thing is it's not just you, happened to a friend of mine."));
         response.Add(new Tuple<string, string, string>("Crane","normal","Yes it's very unsettling. I hate to hear it happened to more. Is there any way you could help me out?"));
         response.Add(new Tuple<string, string, string>("main", "normal","Yeah for sure! But I can't do these for free, I've already lost money tonight."));
@@ -57,7 +57,7 @@ public class Office_Dialogue : MonoBehaviour
     {
         List<Tuple<string, string, string>> response = new List<Tuple<string, string, string>>();
         response.Add(new Tuple<string, string, string>("main", "normal", "So where were you at? I thought you preferred catching up with work at night?"));
-        response.Add(new Tuple<string, string, string>("crane", "angry", "Oh I was at that art show Dr. Burch is hosting. I submitted some of my peices but didn't find any of them hanging up. I talked to her and she claimed they weren't good enough! I come back here to take my mind off of things and this mess was here!"));
+        response.Add(new Tuple<string, string, string>("Crane", "angry", "Oh I was at that art show Dr. Burch is hosting. I submitted some of my peices but didn't find any of them hanging up. I talked to her and she claimed they weren't good enough! I come back here to take my mind off of things and this mess was here!"));
         response.Add(new Tuple<string, string, string>("main", "normal", "<I> Yeah, because this is so much worse than the disorganised mess you usually have."));
         response.Add(new Tuple<string, string, string>("main", "normal", "Weird, that's where my friend was as well..."));
         return response;
@@ -66,11 +66,11 @@ public class Office_Dialogue : MonoBehaviour
     public List<Tuple<string, string, string>> second_painting_done(int whoDunIt)
     {
         List<Tuple<string, string, string>> response = new List<Tuple<string, string, string>>();
-        response.Add(new Tuple<string, string, string>("crane", "happy", "<I> ...mumbling quiety..."));
+        response.Add(new Tuple<string, string, string>("Crane", "happy", "<I> ...mumbling quiety..."));
         response.Add(new Tuple<string, string, string>("main", "normal", "What was that?"));
-        response.Add(new Tuple<string, string, string>("crane", "happy","Oh nothing, just saying that she got what she deserved."));
+        response.Add(new Tuple<string, string, string>("Crane", "happy","Oh nothing, just saying that she got what she deserved."));
         response.Add(new Tuple<string, string, string>("main", "normal", "Kristen? That's a bit harsh"));
-        response.Add(new Tuple<string, string, string>("crane", "normal", "No No! I have nothing against her. The museum curator also got a visit from our new 'Modern artist'. Some of her paintings were destroyed as well."));
+        response.Add(new Tuple<string, string, string>("Crane", "normal", "No No! I have nothing against her. The museum curator also got a visit from our new 'Modern artist'. Some of her paintings were destroyed as well."));
         response.Add(new Tuple<string, string, string>("main", "normal", "<I> What is going on!?"));
         response.Add(new Tuple<string, string, string>("main", "normal", "Oh no! I'll go see if she can tell me anything about what happened."));
         return response; 
