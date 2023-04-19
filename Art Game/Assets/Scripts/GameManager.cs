@@ -91,6 +91,7 @@ public class GameManager : MonoBehaviour
     private bool isBold = false;
     private bool isLeaving = false;
     private bool isTooLong = false;
+    private bool inEndGame = false;
     private bool isWaitingBetweenChars = false;
     private float timeBetweenChars = 0.03f;
     private bool isIntro = true;
@@ -199,13 +200,58 @@ public class GameManager : MonoBehaviour
         if (curScene.name.Equals("Apartment"))
         {
             newScene = "Office";
+            StartCoroutine(LoadSceneAsync());
 
         }
         else if (curScene.name.Equals("Office"))
         {
             newScene = "Museum";
+            StartCoroutine(LoadSceneAsync());
         }
-        StartCoroutine(LoadSceneAsync());
+        else if (curScene.name.Equals("Museum"))
+        {
+            endGame();
+        }
+        
+    }
+
+    private void endGame()
+    {
+        canClickOnPainting = false;
+        nextLevelButton.gameObject.SetActive(false);
+        set_sprite("Kristen", "normal");
+        set_sprite("Crane", "normal");
+        set_sprite("Burch", "normal");
+        inEndGame = true;
+        completed_game_dialogue();
+        foreach (Transform child in peopleObject.transform)
+        {
+            child.gameObject.GetComponent<UnityEngine.UI.Button>().enabled = true; 
+            child.gameObject.GetComponent<UnityEngine.UI.Button>().targetGraphic = child.gameObject.GetComponent<UnityEngine.UI.Image>();
+        }
+    }
+
+    public void selected_person(int selection)
+    {
+        Debug.Log("SELECTION RIGHT HERE: " + selection);
+        if (selection == 0)
+        {
+            dialogueList = end_Dialogue.picked_kristen(whoDidIt);
+            
+        }
+        else if (selection == 1)
+        {
+            dialogueList = end_Dialogue.picked_crane(whoDidIt);
+        }
+        else
+        {
+            dialogueList = end_Dialogue.picked_burch(whoDidIt);
+        }
+        currentDialogueIndex = 0;
+        nameText.text = dialogueList[currentDialogueIndex].Item1;
+        set_sprite(dialogueList[currentDialogueIndex].Item1, dialogueList[currentDialogueIndex].Item2);
+        fullDialogueText = dialogueList[currentDialogueIndex].Item3;
+        StartCoroutine("typeText");
     }
 
     // Coroutine to load the new scene asynchronously
@@ -261,6 +307,8 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if (dialogueCanvasObject.active){
+            canClickOnPainting = false;
+
             if (Input.GetMouseButtonDown(0))
             {
                 if (isTyping && !isTooLong)
@@ -304,16 +352,13 @@ public class GameManager : MonoBehaviour
 
     public void set_sprite(string whoIsSpeaking, string emotion)
     {
-        Debug.Log("Sprite0");
         if (whichPicture.Keys.Contains(whoIsSpeaking))
         {
-            Debug.Log("Sprite1");
             Sprite sprite = whichPicture[whoIsSpeaking][emotion];
             bool replaced = false;
             bool alreadyShown = false;
             for (int i = 0; i < 3; i++)
             {
-                Debug.Log("Sprite2");
                 UnityEngine.UI.Image image = peopleObject.transform.GetChild(i).gameObject.GetComponent<UnityEngine.UI.Image>();
                 image.gameObject.SetActive(true);
                 
@@ -322,32 +367,26 @@ public class GameManager : MonoBehaviour
                     string sprite_name = image.sprite.name.ToLower();
                     if (sprite_name.Contains(whoIsSpeaking.ToLower()))
                     {
-                        Debug.Log("Sprite6");
                         if (!replaced)
                         {
-                            Debug.Log("Sprite7");
                             image.sprite = sprite;
                             replaced = true;
                         }
                         else
                         {
-                            Debug.Log("SpriteS8");
                             image.sprite = null;
                         }
                     }
                 }
                 else if (image.sprite == null)
                 {
-                    Debug.Log("Sprite3");
                     if (!replaced)
                     {
-                        Debug.Log("Sprite4");
                         image.sprite = sprite;
                         replaced = true;
                     }
                     else
                     {
-                        Debug.Log("Sprite5");
                         image.gameObject.SetActive(false);
                     }
 
@@ -357,7 +396,6 @@ public class GameManager : MonoBehaviour
                 
             }
         }
-        else { Debug.Log("Sprite0"); }
     }
     public void completed_game_dialogue()
     {
@@ -388,12 +426,22 @@ public class GameManager : MonoBehaviour
         }
         else if (curScene.name.Equals("Museum"))
         {
-
-            dialogueList = museum_Dialogue.get_dialogue(completedGames, whoDidIt);
-            nameText.text = dialogueList[currentDialogueIndex].Item1;
-            set_sprite(dialogueList[currentDialogueIndex].Item1, dialogueList[currentDialogueIndex].Item2);
-            fullDialogueText = dialogueList[currentDialogueIndex].Item3;
-            StartCoroutine("typeText");
+            if (!inEndGame)
+            {
+                dialogueList = museum_Dialogue.get_dialogue(completedGames, whoDidIt);
+                nameText.text = dialogueList[currentDialogueIndex].Item1;
+                set_sprite(dialogueList[currentDialogueIndex].Item1, dialogueList[currentDialogueIndex].Item2);
+                fullDialogueText = dialogueList[currentDialogueIndex].Item3;
+                StartCoroutine("typeText");
+            }
+            else
+            {
+                dialogueList = end_Dialogue.start_of_end(whoDidIt);
+                nameText.text = dialogueList[currentDialogueIndex].Item1;
+                set_sprite(dialogueList[currentDialogueIndex].Item1, dialogueList[currentDialogueIndex].Item2);
+                fullDialogueText = dialogueList[currentDialogueIndex].Item3;
+                StartCoroutine("typeText");
+            }
         }
         else
         {
@@ -409,7 +457,7 @@ public class GameManager : MonoBehaviour
             introBackground.SetActive(false);
             completed_game_dialogue();
         }
-        else
+        else if (!inEndGame)
         {
             canClickOnPainting = true;
             dialogueCanvasObject.SetActive(false);
@@ -921,9 +969,16 @@ public class GameManager : MonoBehaviour
             completed_game_just_now = false;
             completed_game_dialogue();
         }
-        if ((completedGames > 0&& curScene.name != "Museum"))
+        if ((completedGames > 0))
         {
+            if (curScene.name == "Museum")
+            {
+                nextLevelButton.gameObject.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = "Choose Person"; 
+
+            }
             nextLevelButton.gameObject.SetActive(true);
+
+
         }
         else if (nextLevelButton)
         {
