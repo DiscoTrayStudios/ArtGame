@@ -34,7 +34,11 @@ public class Museum_Dialogue : MonoBehaviour
         }
         else if (completed_games == 4)
         {
-            return third_painting_done(whoDunIt);
+            return fourth_painting_done(whoDunIt);
+        }
+        else if (completed_games == 5)
+        {
+            return fifth_painting_done(whoDunIt);
         }
         else
         {
