@@ -46,7 +46,7 @@ public class Office_Dialogue : MonoBehaviour
         List<Tuple<string, string, string>> response = new List<Tuple<string,string, string>>();
         
         response.Add(new Tuple<string,string,string>("main","normal","Hey Professor, long time no see!"));
-        response.Add(new Tuple<string, string, string>("Crane", "surprised", "OH! You frightened me! Please don't sneak up on me like that again. What are you doing here?"));
+        response.Add(new Tuple<string, string, string>("Crane", "shocked", "OH! You frightened me! Please don't sneak up on me like that again. What are you doing here?"));
         response.Add(new Tuple<string, string, string>("main", "norma", "I heard what happened to you. weirdest thing is it's not just you, happened to a friend of mine."));
         response.Add(new Tuple<string, string, string>("Crane","normal","Yes it's very unsettling. I hate to hear it happened to more. Is there any way you could help me out?"));
         response.Add(new Tuple<string, string, string>("main", "normal","Yeah for sure! But I can't do these for free, I've already lost money tonight."));

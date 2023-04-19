@@ -93,6 +93,8 @@ public class GameManager : MonoBehaviour
     private bool isTooLong = false;
     private bool inEndGame = false;
     private bool isWaitingBetweenChars = false;
+
+    private int whoWasPicked=-1;
     private float timeBetweenChars = 0.03f;
     private bool isIntro = true;
     private int currentDialogueIndex;
@@ -187,6 +189,10 @@ public class GameManager : MonoBehaviour
         whichPicture.Add("Crane", cdict);
         whichPicture.Add("Burch", bdict);
         dialogueList = start_Dialogue.get_dialogue(completedGames, whoDidIt);
+        if (curScene.name == "Office" || curScene.name == "Museum")
+        {
+            completed_game_dialogue();
+        }
 
 
 
@@ -195,7 +201,7 @@ public class GameManager : MonoBehaviour
     
     public void LoadScene(){
         loadNext = true;
-        completedGames = 5;
+        completedGames = 50;
         completed_game_dialogue();
     }
 
@@ -229,27 +235,25 @@ public class GameManager : MonoBehaviour
         set_sprite("Burch", "normal");
         inEndGame = true;
         completed_game_dialogue();
-        foreach (Transform child in peopleObject.transform)
-        {
-            child.gameObject.GetComponent<UnityEngine.UI.Button>().enabled = true; 
-            child.gameObject.GetComponent<UnityEngine.UI.Button>().targetGraphic = child.gameObject.GetComponent<UnityEngine.UI.Image>();
-        }
+        
     }
 
     public void selected_person(int selection)
     {
-        Debug.Log("SELECTION RIGHT HERE: " + selection);
         if (selection == 0)
         {
+            whoWasPicked = selection;
             dialogueList = end_Dialogue.picked_kristen(whoDidIt);
             
         }
         else if (selection == 1)
         {
+            whoWasPicked = selection;
             dialogueList = end_Dialogue.picked_crane(whoDidIt);
         }
         else
         {
+            whoWasPicked = selection;
             dialogueList = end_Dialogue.picked_burch(whoDidIt);
         }
         currentDialogueIndex = 0;
@@ -350,6 +354,10 @@ public class GameManager : MonoBehaviour
                         quitDialogue();
                     }
                 }
+                else
+                {
+                    Debug.Log("Why is it reaching here");
+                }
             }
         }
         
@@ -406,6 +414,7 @@ public class GameManager : MonoBehaviour
     }
     public void completed_game_dialogue()
     {
+        nextLevelButton.gameObject.SetActive(false);
         dialogueCanvasObject.SetActive(true);
         currentDialogueIndex = 0;
         dialogueList.Clear();
@@ -456,6 +465,14 @@ public class GameManager : MonoBehaviour
         }
         
     }
+    public void turn_off_people_buttons()
+    {
+        foreach (Transform child in peopleObject.transform)
+        {
+            child.gameObject.GetComponent<UnityEngine.UI.Button>().enabled = false;
+            child.gameObject.GetComponent<UnityEngine.UI.Button>().targetGraphic = child.gameObject.GetComponent<UnityEngine.UI.Image>();
+        }
+    }
     public void quitDialogue()
     {
         if (isIntro) 
@@ -477,6 +494,25 @@ public class GameManager : MonoBehaviour
                 child.gameObject.GetComponent<UnityEngine.UI.Image>().sprite = null;
                 child.gameObject.SetActive(false);
             }
+        }
+        else if (inEndGame)
+        {
+            foreach (Transform child in peopleObject.transform)
+            {
+                child.gameObject.GetComponent<UnityEngine.UI.Button>().enabled = true;
+                child.gameObject.GetComponent<UnityEngine.UI.Button>().targetGraphic = child.gameObject.GetComponent<UnityEngine.UI.Image>();
+            }
+            if (whoWasPicked != -1)
+            {
+                Color c = Color.HSVToRGB(0f, 0f, 0.5f);
+                c.a = 0.5f;
+                peopleObject.transform.GetChild(whoWasPicked).gameObject.GetComponent<UnityEngine.UI.Button>().enabled = false;
+                peopleObject.transform.GetChild(whoWasPicked).gameObject.GetComponent<UnityEngine.UI.Image>().color = c;
+            }
+        }
+        if (completedGames > 0)
+        {
+            nextLevelButton.gameObject.SetActive(true);
         }
     }
 
@@ -656,6 +692,7 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(IspyMusic));
                 cam.orthographicSize = 13.5f;
+                nextLevelButton.gameObject.SetActive(false);
 
             }
             else if (name.Equals("office ispy"))
@@ -666,6 +703,7 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(IspyMusic));
                 cam.orthographicSize = 13.5f;
+                nextLevelButton.gameObject.SetActive(false);
 
             }
             else if (name.Equals("museum ispy"))
@@ -675,6 +713,7 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(IspyMusic));
                 cam.orthographicSize = 13.5f;
+                nextLevelButton.gameObject.SetActive(false);
 
             }
             else if (name.Equals("apartment jigsaw"))
@@ -685,6 +724,7 @@ public class GameManager : MonoBehaviour
                 cam.GetComponent<DragAndDrop>().enabled = true;
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(JigsawMusic));
+                nextLevelButton.gameObject.SetActive(false);
             }
             else if (name.Equals("office jigsaw"))
             {
@@ -694,6 +734,7 @@ public class GameManager : MonoBehaviour
                 cam.GetComponent<DragAndDrop>().enabled = true;
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(JigsawMusic));
+                nextLevelButton.gameObject.SetActive(false);
             }
             else if (name.Equals("museum jigsaw"))
             {
@@ -703,6 +744,7 @@ public class GameManager : MonoBehaviour
                 cam.GetComponent<DragAndDrop>().enabled = true;
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(JigsawMusic));
+                nextLevelButton.gameObject.SetActive(false);
             }
             else if (name.Equals("lilypads"))
             {
@@ -711,6 +753,7 @@ public class GameManager : MonoBehaviour
                 cam.GetComponent<DragAndDrop>().enabled = true;
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(JigsawMusic));
+                nextLevelButton.gameObject.SetActive(false);
             }
             else if (name.Equals("apartment pbn"))
             {
@@ -721,6 +764,7 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(FadeInMusic(PBNMusic));
                 pbnCounterLimit = 44;
                 cam.orthographicSize = 13.5f;
+                nextLevelButton.gameObject.SetActive(false);
             }
             else if (name.Equals("office pbn"))
             {
@@ -730,6 +774,7 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(PBNMusic));
                 pbnCounterLimit = 75;
+                nextLevelButton.gameObject.SetActive(false);
                 cam.orthographicSize = 13.5f;
             }
             else if (name.Equals("museum pbn"))
@@ -738,6 +783,7 @@ public class GameManager : MonoBehaviour
                 cam.transform.rotation = Quaternion.Euler(0, 0, 0);
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(PBNMusic));
+                nextLevelButton.gameObject.SetActive(false);
                 pbnCounterLimit = 78;
             }
 
@@ -747,6 +793,7 @@ public class GameManager : MonoBehaviour
                 cam.transform.rotation = Quaternion.Euler(0, 0, 0);
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(TileMusic));
+                nextLevelButton.gameObject.SetActive(false);
             }
             else if (name.Equals("apartment tile"))
             {
@@ -754,6 +801,7 @@ public class GameManager : MonoBehaviour
                 cam.transform.rotation = Quaternion.Euler(0, 0, 0);
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(TileMusic));
+                nextLevelButton.gameObject.SetActive(false);
             }
             else if (name.Equals("office tile"))
             {
@@ -761,6 +809,7 @@ public class GameManager : MonoBehaviour
                 cam.transform.rotation = Quaternion.Euler(0, 0, 0);
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(TileMusic));
+                nextLevelButton.gameObject.SetActive(false);
             }
             else if (name.Equals("museum tile1"))
             {
@@ -769,6 +818,7 @@ public class GameManager : MonoBehaviour
                 cam.transform.rotation = Quaternion.Euler(0, 0, 0);
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(TileMusic));
+                nextLevelButton.gameObject.SetActive(false);
             }
             else if (name.Equals("museum tile2"))
             {
@@ -777,6 +827,7 @@ public class GameManager : MonoBehaviour
                 cam.transform.rotation = Quaternion.Euler(0, 0, 0);
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(TileMusic));
+                nextLevelButton.gameObject.SetActive(false);
             }
 
             displayInfoText();
@@ -925,28 +976,23 @@ public class GameManager : MonoBehaviour
     {
         returnButton.gameObject.active = false;
         infoScreen.gameObject.active = true;
-        if (game.Equals("luncheon"))
+        if (game.Contains("ispy"))
         {
 
             infotext.text = "Tap on the hidden objects to complete the game!";
         }
-        else if (game.Equals("lilypads"))
+        else if (game.Contains("jigsaw"))
         {
             infotext.text = "Drag and Drop the jigsaw pieces into the correct position! Correctly placed pieces will stay in place.";
         }
-        else if (game.Equals("and i was there"))
+        else if (game.Contains("pbn"))
         {
             infotext.text = "Paint each section with the matching numbered paint. Tap on a paint to select it, then the painting to use it!";
 
         }
-        else if (game.Equals("ice pies"))
+        else if (game.Contains("tile"))
         {
-            infotext.text = "Tap the hidden words and phrases in the picture!";
-
-        }
-        else if (game.Equals("crossing"))
-        {
-            infotext.text = "Tap on the pieces to slide them over and try and get the original picture! The bottom left square will be missing when the puzzle is complete.";
+            infotext.text = "Tap on the pieces to slide them over and try and get the original picture! The bottom left square will be missing when the puzzle is complete. It is easiest to get the top left corner, followed by top right, then fill in the top row. After that, fill in the right column and repeat!";
         }
         else
         {
@@ -987,7 +1033,11 @@ public class GameManager : MonoBehaviour
                 nextLevelButton.gameObject.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = "Choose Person"; 
 
             }
-            nextLevelButton.gameObject.SetActive(true);
+            if (!dialogueCanvasObject.active)
+            {
+                nextLevelButton.gameObject.SetActive(true);
+            }
+            
 
 
         }
