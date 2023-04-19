@@ -8,6 +8,8 @@ using UnityEngine.Audio;
 using UnityEditor;
 using UnityEngine.UIElements;
 using System;
+using Unity.VisualScripting;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
@@ -84,10 +86,33 @@ public class GameManager : MonoBehaviour
     private string fullDialogueText;
     private string whoIsSpeaking;
     private bool isTyping = false;
+    private bool isItalic = false;
+    private bool isBold = false;
+    private bool isLeaving = false;
+    private bool isTooLong = false;
+    private bool isWaitingBetweenChars = false;
+    private float timeBetweenChars = 0.03f;
     private int currentDialogueIndex;
     private TextMeshProUGUI dialogueText;
+    private TextMeshProUGUI nameText;
 
-    public GameObject dialogueObject;
+    public GameObject mainTextObject;
+    public GameObject nameTextObject;
+
+    public GameObject peopleObject;
+    public Sprite kristenNormal;
+    public Sprite kristenShocked;
+    public Sprite kristenHappy;
+    public Sprite kristenAngry;
+    public Sprite craneNormal;
+    public Sprite craneShocked;
+    public Sprite craneHappy;
+    public Sprite craneAngry;
+    public Sprite burchNormal;
+    public Sprite burchShocked;
+    public Sprite burchHappy;
+    public Sprite burchAngry;
+    private Dictionary<string, Dictionary<string, Sprite>> whichPicture;
 
     private void Awake()
     {
@@ -135,8 +160,31 @@ public class GameManager : MonoBehaviour
         office_Dialogue  = new Office_Dialogue();
         museum_Dialogue = new Museum_Dialogue();
         end_Dialogue    = new End_Dialogue();
-        dialogueText = dialogueObject.GetComponent<TextMeshProUGUI>();
-        
+        dialogueText = mainTextObject.GetComponent<TextMeshProUGUI>();
+        nameText = nameTextObject.GetComponent<TextMeshProUGUI>();
+        //kristenNormal = Resources.Load<Sprite>("Images/Characters/kristenWalker");
+        whichPicture = new Dictionary<string, Dictionary<string, Sprite>>();
+        Dictionary<string, Sprite> kdict = new Dictionary<string, Sprite>();
+        Dictionary<string, Sprite> cdict = new Dictionary<string, Sprite>();
+        Dictionary<string, Sprite> bdict = new Dictionary<string, Sprite>();
+        kdict.Add("normal", kristenNormal);
+        kdict.Add("angry", kristenAngry);
+        kdict.Add("shocked", kristenShocked);
+        kdict.Add("happy", kristenHappy);
+        cdict.Add("normal", craneNormal);
+        cdict.Add("angry", craneAngry);
+        cdict.Add("shocked", craneShocked);
+        cdict.Add("happy", craneHappy);
+        bdict.Add("normal", burchNormal);
+        bdict.Add("angry", burchAngry);
+        bdict.Add("shocked", burchShocked);
+        bdict.Add("happy", burchHappy);
+        whichPicture.Add("Kristen", kdict);
+        whichPicture.Add("Crane", cdict);
+        whichPicture.Add("Burch", bdict);
+        dialogueList = start_Dialogue.get_dialogue(completedGames, whoDidIt);
+
+
 
 
     }
@@ -213,17 +261,31 @@ public class GameManager : MonoBehaviour
         if (dialogueCanvasObject.active){
             if (Input.GetMouseButtonDown(0))
             {
-                if (isTyping)
+                if (isTyping && !isTooLong)
                 {
-                    StopCoroutine("typeText");
-                    dialogueText.text = fullDialogueText;
-                    isTyping = false;
+                    //if (fullDialogueText.Length > 200)
+                    //{
+                    //    timeBetweenChars = 0f;
+                    //}
+                    //else
+                    //{
+                    //    StopCoroutine("typeText");
+                    //    dialogueText.text = fullDialogueText;
+                    //    isTyping = false;
+                    //} 
+                    isWaitingBetweenChars = false;
+                    
                 }
-                else
+                else if (!isTooLong)
                 {
-                    if (currentDialogueIndex < dialogueList.Count) {
-                        fullDialogueText = dialogueList[currentDialogueIndex].Item3;
+                    timeBetweenChars = 0.03f;
+                    if (currentDialogueIndex < dialogueList.Count-1) {
+
                         currentDialogueIndex += 1;
+                        nameText.text = dialogueList[currentDialogueIndex].Item1;
+                        fullDialogueText = dialogueList[currentDialogueIndex].Item3;
+                        set_sprite(dialogueList[currentDialogueIndex].Item1, dialogueList[currentDialogueIndex].Item2);
+
                         StartCoroutine("typeText");
                     }
                     else
@@ -236,42 +298,169 @@ public class GameManager : MonoBehaviour
         
     }
 
+
+
+    public void set_sprite(string whoIsSpeaking, string emotion)
+    {
+        Debug.Log("Sprite0");
+        if (whichPicture.Keys.Contains(whoIsSpeaking))
+        {
+            Debug.Log("Sprite1");
+            Sprite sprite = whichPicture[whoIsSpeaking][emotion];
+            bool replaced = false;
+            bool alreadyShown = false;
+            for (int i = 0; i < 3; i++)
+            {
+                Debug.Log("Sprite2");
+                UnityEngine.UI.Image image = peopleObject.transform.GetChild(i).gameObject.GetComponent<UnityEngine.UI.Image>();
+                image.gameObject.SetActive(true);
+                
+                if (image.sprite != null )
+                {
+                    string sprite_name = image.sprite.name.ToLower();
+                    if (sprite_name.Contains(whoIsSpeaking.ToLower()))
+                    {
+                        Debug.Log("Sprite6");
+                        if (!replaced)
+                        {
+                            Debug.Log("Sprite7");
+                            image.sprite = sprite;
+                            replaced = true;
+                        }
+                        else
+                        {
+                            Debug.Log("SpriteS8");
+                            image.sprite = null;
+                        }
+                    }
+                }
+                else if (image.sprite == null)
+                {
+                    Debug.Log("Sprite3");
+                    if (!replaced)
+                    {
+                        Debug.Log("Sprite4");
+                        image.sprite = sprite;
+                        replaced = true;
+                    }
+                    else
+                    {
+                        Debug.Log("Sprite5");
+                        image.gameObject.SetActive(false);
+                    }
+
+                }
+               
+                
+                
+            }
+        }
+        else { Debug.Log("Sprite0"); }
+    }
     public void completed_game_dialogue()
     {
         dialogueCanvasObject.SetActive(true);
         currentDialogueIndex = 0;
-        if (completedGames == 1)
+        dialogueList.Clear();
+        canClickOnPainting = false;
+
+        currentDialogueIndex = 0;
+        if (curScene.name.Equals("Apartment"))
         {
-            if (curScene.name.Equals("Office"))
-            {
-                dialogueList.Clear();
-                dialogueList = office_Dialogue.get_dialogue(completedGames, whoDidIt);
-                currentDialogueIndex = 0;
-                fullDialogueText = dialogueList[currentDialogueIndex].Item3;
-                canClickOnPainting = false;
-                StartCoroutine("typeText");
-            }
-            else
-            {
-                dialogueCanvasObject.SetActive(false);
-            }
+
+            dialogueList = friend_Dialogue.get_dialogue(completedGames, whoDidIt);
+            nameText.text = dialogueList[currentDialogueIndex].Item1;
+            //TODO: Put sprite stuff for character images here.
+            set_sprite(dialogueList[currentDialogueIndex].Item1, dialogueList[currentDialogueIndex].Item2);
+            fullDialogueText = dialogueList[currentDialogueIndex].Item3;
+            StartCoroutine("typeText");
         }
+        else if (curScene.name.Equals("Office"))
+        {
+            
+            dialogueList = office_Dialogue.get_dialogue(completedGames, whoDidIt);
+            nameText.text = dialogueList[currentDialogueIndex].Item1;
+            set_sprite(dialogueList[currentDialogueIndex].Item1, dialogueList[currentDialogueIndex].Item2);
+            fullDialogueText = dialogueList[currentDialogueIndex].Item3;
+            StartCoroutine("typeText");
+        }
+        else if (curScene.name.Equals("Museum"))
+        {
+
+            dialogueList = museum_Dialogue.get_dialogue(completedGames, whoDidIt);
+            nameText.text = dialogueList[currentDialogueIndex].Item1;
+            set_sprite(dialogueList[currentDialogueIndex].Item1, dialogueList[currentDialogueIndex].Item2);
+            fullDialogueText = dialogueList[currentDialogueIndex].Item3;
+            StartCoroutine("typeText");
+        }
+        else
+        {
+            dialogueCanvasObject.SetActive(false);
+        }
+        
     }
     public void quitDialogue()
     {
         canClickOnPainting = true;
         dialogueCanvasObject.SetActive(false);
+        foreach (Transform child in peopleObject.transform)
+        {
+            child.gameObject.GetComponent<UnityEngine.UI.Image>().sprite = null;
+            child.gameObject.SetActive(false);
+        }
     }
 
     private IEnumerator typeText()
     {
+        
+        List<string> textList = fullDialogueText.Split(' ').ToList<string>();
+        if (textList[0].Equals("<I>"))
+        {
+            isItalic = true;
+            textList.RemoveAt(0);
+        }
+        else if (textList[0].Equals("<L>"))
+        {
+            isLeaving = true;
+            textList.RemoveAt(0);
+        }
+        else if (textList[0].Equals("<B>"))
+        {
+            isBold = true;
+            textList.RemoveAt(0);
+        }
         isTyping = true;
         dialogueText.text = "";
-        foreach (char c in fullDialogueText)
+        int curChars = 0;
+        foreach (string word in textList)
         {
-            dialogueText.text += c;
-            yield return new WaitForSeconds(0.03f);
+            if (curChars + word.Length > 200)
+            {
+                while (!Input.GetMouseButtonDown(0))
+                {
+                    isTooLong = true;
+                    yield return null;
+                }
+                timeBetweenChars = 0.03f;
+                isTooLong = false;
+                curChars = 0;
+                dialogueText.text = "";
+
+                isWaitingBetweenChars = true;
+            }
+            dialogueText.text += " ";
+            foreach (char c in word)
+            {
+                dialogueText.text += c;
+                curChars++;
+                if (isWaitingBetweenChars)
+                {
+                    yield return new WaitForSeconds(timeBetweenChars);
+                }
+            }
         }
+
+        isWaitingBetweenChars = true;
         isTyping = false;
         yield return null;
 
