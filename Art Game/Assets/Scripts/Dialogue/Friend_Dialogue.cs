@@ -66,7 +66,7 @@ public class Friend_Dialogue : MonoBehaviour
         response.Add(new Tuple<string, string, string>("Player", "normal", "So what were you doing before this? How did someone get the opportunity to do this?"));
         response.Add(new Tuple<string, string, string>("Kristen", "normal", "Well I was just at an art gallery like trying to plan out a new purchase ya'know?"));
         response.Add(new Tuple<string, string, string>("Player", "normal", "<I> No wonder she can't pay me.."));
-        response.Add(new Tuple<string, string, string>("Kristen", "surprised", "And then I like came home with like the new painting and I find that it was like all like this!!"));
+        response.Add(new Tuple<string, string, string>("Kristen", "shocked", "And then I like came home with like the new painting and I find that it was like all like this!!"));
         response.Add(new Tuple<string, string, string>("Player", "normal", "You were at an art gallery this late?"));
         response.Add(new Tuple<string, string, string>("Kristen", "normal", "Of course! Like where else would I be?"));
         response.Add(new Tuple<string, string, string>("Player", "normal", "Right.."));
@@ -76,13 +76,13 @@ public class Friend_Dialogue : MonoBehaviour
     public List<Tuple<string, string, string>> second_painting_done(int whoDunIt)
     {
         List<Tuple<string, string, string>> response = new List<Tuple<string, string, string>>();
-        response.Add(new Tuple<string, string, string>("Kristen", "surprised", "Oh that's like, really weird.."));
+        response.Add(new Tuple<string, string, string>("Kristen", "shocked", "Oh that's like, really weird.."));
         response.Add(new Tuple<string, string, string>("Player", "normal", "What is it?"));
         response.Add(new Tuple<string, string, string>("Kristen", "happy", "It's nothing, just like the worst professor ever also got their art like totally messed up."));
         response.Add(new Tuple<string, string, string>("Player", "normal", "Wait who??"));
         response.Add(new Tuple<string, string, string>("Kristen", "angry", "Oh only like the mean Professor Crane, he failed me for like absolutely no reason."));
         response.Add(new Tuple<string, string, string>("Player", "normal", "Sureeeee..."));
-        response.Add(new Tuple<string, string, string>("Kristen", "surprised", "What's that supposed to mean!?"));
+        response.Add(new Tuple<string, string, string>("Kristen", "shocked", "What's that supposed to mean!?"));
         response.Add(new Tuple<string, string, string>("Player", "normal", "Nothing, nothing!"));
         response.Add(new Tuple<string, string, string>("Player", "normal", "<I> I know Micheal Crane... Maybe I should go there next."));
         return response; 
