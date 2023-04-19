@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public Canvas returnButton;
     public Canvas infoScreen;
     public Canvas pauseScreen;
+    public GameObject introBackground;
     public TextMeshProUGUI infotext;
     public Camera cam;
     private Collider pcollider;
@@ -92,6 +93,7 @@ public class GameManager : MonoBehaviour
     private bool isTooLong = false;
     private bool isWaitingBetweenChars = false;
     private float timeBetweenChars = 0.03f;
+    private bool isIntro = true;
     private int currentDialogueIndex;
     private TextMeshProUGUI dialogueText;
     private TextMeshProUGUI nameText;
@@ -401,12 +403,21 @@ public class GameManager : MonoBehaviour
     }
     public void quitDialogue()
     {
-        canClickOnPainting = true;
-        dialogueCanvasObject.SetActive(false);
-        foreach (Transform child in peopleObject.transform)
+        if (isIntro) 
         {
-            child.gameObject.GetComponent<UnityEngine.UI.Image>().sprite = null;
-            child.gameObject.SetActive(false);
+            isIntro = false;
+            introBackground.SetActive(false);
+            completed_game_dialogue();
+        }
+        else
+        {
+            canClickOnPainting = true;
+            dialogueCanvasObject.SetActive(false);
+            foreach (Transform child in peopleObject.transform)
+            {
+                child.gameObject.GetComponent<UnityEngine.UI.Image>().sprite = null;
+                child.gameObject.SetActive(false);
+            }
         }
     }
 
@@ -414,21 +425,6 @@ public class GameManager : MonoBehaviour
     {
         
         List<string> textList = fullDialogueText.Split(' ').ToList<string>();
-        if (textList[0].Equals("<I>"))
-        {
-            isItalic = true;
-            textList.RemoveAt(0);
-        }
-        else if (textList[0].Equals("<L>"))
-        {
-            isLeaving = true;
-            textList.RemoveAt(0);
-        }
-        else if (textList[0].Equals("<B>"))
-        {
-            isBold = true;
-            textList.RemoveAt(0);
-        }
         isTyping = true;
         dialogueText.text = "";
         int curChars = 0;
