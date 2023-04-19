@@ -414,21 +414,6 @@ public class GameManager : MonoBehaviour
     {
         
         List<string> textList = fullDialogueText.Split(' ').ToList<string>();
-        if (textList[0].Equals("<I>"))
-        {
-            isItalic = true;
-            textList.RemoveAt(0);
-        }
-        else if (textList[0].Equals("<L>"))
-        {
-            isLeaving = true;
-            textList.RemoveAt(0);
-        }
-        else if (textList[0].Equals("<B>"))
-        {
-            isBold = true;
-            textList.RemoveAt(0);
-        }
         isTyping = true;
         dialogueText.text = "";
         int curChars = 0;
