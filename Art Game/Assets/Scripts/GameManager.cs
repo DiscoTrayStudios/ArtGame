@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public Canvas returnButton;
     public Canvas infoScreen;
     public Canvas pauseScreen;
+    public GameObject introBackground;
     public TextMeshProUGUI infotext;
     public Camera cam;
     private Collider pcollider;
@@ -405,6 +406,7 @@ public class GameManager : MonoBehaviour
         if (isIntro) 
         {
             isIntro = false;
+            introBackground.SetActive(false);
             completed_game_dialogue();
         }
         else
