@@ -98,6 +98,7 @@ public class GameManager : MonoBehaviour
     private int currentDialogueIndex;
     private TextMeshProUGUI dialogueText;
     private TextMeshProUGUI nameText;
+    private bool loadNext = false;
 
     public GameObject mainTextObject;
     public GameObject nameTextObject;
@@ -192,11 +193,15 @@ public class GameManager : MonoBehaviour
 
     }
     
+    public void LoadScene(){
+        loadNext = true;
+        completedGames = 5;
+        completed_game_dialogue();
+    }
 
     // Load the new scene asynchronously
-    public void AsyncLoadScene()
+    private void AsyncLoadScene()
     {
-
         if (curScene.name.Equals("Apartment"))
         {
             newScene = "Office";
@@ -268,6 +273,8 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
         curScene = SceneManager.GetSceneByName(newScene);
+        completedGames = 0;
+        completed_game_dialogue();
         
     }
 
@@ -457,6 +464,10 @@ public class GameManager : MonoBehaviour
             introBackground.SetActive(false);
             completed_game_dialogue();
         }
+        else if (loadNext) {
+            loadNext = false;
+            AsyncLoadScene();
+        }
         else if (!inEndGame)
         {
             canClickOnPainting = true;
@@ -507,7 +518,6 @@ public class GameManager : MonoBehaviour
         isWaitingBetweenChars = true;
         isTyping = false;
         yield return null;
-
 
     }
 
@@ -587,6 +597,7 @@ public class GameManager : MonoBehaviour
     {
         paintings.SetActive(true);
         mainMenu.SetActive(false);
+        introBackground.SetActive(true);
         pauseScreen.gameObject.SetActive(true);
         StartCoroutine(FadeOutMusic(MainMenuMusic));
         StartCoroutine(FadeInMusic(GalleryMusic));
