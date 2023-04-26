@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
     public GameObject curPaint;
     public bool canClickOnPainting;
     public bool tileSlideStarted = false;
+    private bool museumtile2start = false;
     public UnityEngine.UI.Button nextLevelButton;
 
 
@@ -228,6 +229,7 @@ public class GameManager : MonoBehaviour
 
     private void endGame()
     {
+        
         canClickOnPainting = false;
         nextLevelButton.gameObject.SetActive(false);
         set_sprite("Kristen", "normal");
@@ -499,18 +501,20 @@ public class GameManager : MonoBehaviour
         {
             foreach (Transform child in peopleObject.transform)
             {
+                Debug.Log("setting to true");
                 child.gameObject.GetComponent<UnityEngine.UI.Button>().enabled = true;
                 child.gameObject.GetComponent<UnityEngine.UI.Button>().targetGraphic = child.gameObject.GetComponent<UnityEngine.UI.Image>();
             }
             if (whoWasPicked != -1)
             {
+                Debug.Log("setting to false");
                 Color c = Color.HSVToRGB(0f, 0f, 0.5f);
                 c.a = 0.5f;
                 peopleObject.transform.GetChild(whoWasPicked).gameObject.GetComponent<UnityEngine.UI.Button>().enabled = false;
                 peopleObject.transform.GetChild(whoWasPicked).gameObject.GetComponent<UnityEngine.UI.Image>().color = c;
             }
         }
-        if (completedGames > 0)
+        if (completedGames > 0 && !inEndGame)
         {
             nextLevelButton.gameObject.SetActive(true);
         }
@@ -701,6 +705,7 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(FadeInMusic(IspyMusic));
                 cam.orthographicSize = 13.5f;
                 nextLevelButton.gameObject.SetActive(false);
+                
 
             }
             else if (name.Equals("office ispy"))
@@ -845,15 +850,23 @@ public class GameManager : MonoBehaviour
                 cam.orthographic = false;
                 if (!tileSlideStarted)
                 {
-                    if (name.Equals("museum tile2"))
+                    if (name.Equals("museum tile2") && !museumtile2start)
                     {
                         slider2.GetComponent<ST_PuzzleDisplay>().actualStart();
-                        tileSlideStarted = true;
+                        museumtile2start = true;
                     }
                     else
                     {
                         slider.GetComponent<ST_PuzzleDisplay>().actualStart();
                         tileSlideStarted = true;
+                    }
+                }
+                else
+                {
+                    if (name.Equals("museum tile2") && !museumtile2start)
+                    {
+                        slider2.GetComponent<ST_PuzzleDisplay>().actualStart();
+                        museumtile2start = true;
                     }
                 }
 
@@ -1022,6 +1035,7 @@ public class GameManager : MonoBehaviour
         returnButton.gameObject.active = false;
         cam.GetComponent<DragAndDrop>().enabled = false;
         cam.orthographic = false;
+        
         curPaint.GetComponent<Transition>().lerp = true;
         curPaint.GetComponent<Transition>().forward = false;
         curPaint.GetComponent<Transition>().stageOne = true;
@@ -1031,6 +1045,7 @@ public class GameManager : MonoBehaviour
         UnityEngine.Cursor.visible = true;
         if (completed_game_just_now)
         {
+            curPaint.transform.parent.gameObject.GetComponent<BoxCollider>().enabled = false;
             completed_game_just_now = false;
             completed_game_dialogue();
         }
