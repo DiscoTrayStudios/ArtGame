@@ -48,6 +48,7 @@ public class GameManager : MonoBehaviour
     public AudioSource IspyMusic;
     public AudioSource JigsawMusic;
     public AudioSource PBNMusic;
+    public AudioMixer mixer;
     public int whoDidIt;
     public GameObject clueObjects;
     public GameObject toggableLights;
@@ -158,7 +159,6 @@ public class GameManager : MonoBehaviour
         pbnCounter = 0;
         pbnCounterLimit = 0;
         StartCoroutine(FadeInMusic(MainMenuMusic));
-        AudioListener.volume = 0.3f;
         resumeButton = pauseScreen.transform.GetChild(2).gameObject;
         loadClueObjects();
         start_Dialogue  = new Start_Dialogue();
@@ -199,7 +199,7 @@ public class GameManager : MonoBehaviour
 
     }
     
-    public void LoadScene(){
+    public void LoadScene(){ 
         loadNext = true;
         completedGames = 50;
         completed_game_dialogue();
@@ -539,11 +539,19 @@ public class GameManager : MonoBehaviour
 
                 isWaitingBetweenChars = true;
             }
-            dialogueText.text += " ";
+            if (dialogueText.text != "") {dialogueText.text += " ";}
             foreach (char c in word)
             {
                 dialogueText.text += c;
                 curChars++;
+                if (c == '<')
+                {
+                    isWaitingBetweenChars = false;
+                }
+                if (c == '>')
+                {
+                    isWaitingBetweenChars = true;
+                }
                 if (isWaitingBetweenChars)
                 {
                     yield return new WaitForSeconds(timeBetweenChars);
@@ -604,9 +612,9 @@ public class GameManager : MonoBehaviour
             
         }
     }
-    public void AdjustVolume(float newVolume)
+    public void AdjustVolume(float sliderValue)
     {
-        AudioListener.volume = newVolume;
+        mixer.SetFloat("masterVol", (Mathf.Log10(sliderValue) * 20));
     }
 
     public IEnumerator FadeInMusic(AudioSource source)
