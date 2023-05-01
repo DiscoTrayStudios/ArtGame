@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     public GameObject homePage;
     public GameObject creditsPage;
     public GameObject settingsPage;
+    public GameObject windgatePage;
     public GameObject backButton;
     public GameObject curPaint;
     public bool canClickOnPainting;
@@ -678,6 +679,16 @@ public class GameManager : MonoBehaviour
         creditsPage.SetActive(false);
         settingsPage.SetActive(false);
         backButton.SetActive(false);
+        windgatePage.SetActive(false);
+    }
+
+    public void windgate_info()
+    {
+        homePage.SetActive(false);
+        creditsPage.SetActive(false);
+        settingsPage.SetActive(false);
+        backButton.SetActive(true);
+        windgatePage.SetActive(true);
     }
 
     public void setLerp(bool val)
