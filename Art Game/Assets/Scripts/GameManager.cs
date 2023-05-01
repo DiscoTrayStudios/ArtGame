@@ -149,6 +149,9 @@ public class GameManager : MonoBehaviour
 
         }
     }
+    public void toggle_can_click(bool v){
+        canClickOnPainting = v;
+    }
     // Start is called before the first frame update
     void Start()
     {
